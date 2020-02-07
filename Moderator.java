@@ -1,9 +1,9 @@
-Public class Moderator {
+public class Moderator {
 
     private int playerCount;
     private int dayCount = 1;
     
-    public static void setPlayerCount(int count) {
+    public void setPlayerCount(int count) {
         this.playerCount = count;
     }
 

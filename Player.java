@@ -1,6 +1,6 @@
 import java.util.Random;
 
-Public class Player {
+public class Player {
     private int credits;
     private int dollars;
     private int playerID;
@@ -9,43 +9,50 @@ Public class Player {
     private String currentLocation;
     private String currentRole;
 
-    public static void setPlayerID(int ID) {
+    public void setPlayerID(int ID) {
         //set playerID;
+        this.playerID = ID;
     }
 
-    public static int getPlayerID() {
+    public int getPlayerID() {
         //return playerID;
+        return this.playerID;
     }
 
-    public static void setDollars(int dollars) {
+    public void setDollars(int dollars) {
         //set dollars
     }
 
-    public static int getDollars() {
+    public int getDollars() {
         //return dollars;
+        return this.dollars;
     }
 
-    public static void setCredits(int credits) {
+    public void setCredits(int credits) {
         //set credits
     }
 
-    public static int getCredits() {
+    public int getCredits() {
         //return credits;
+        return this.credits;
     }
 
-    public static void setPlayerRank(int rank) {
+    public void setPlayerRank(int rank) {
         //set rank
     }
 
-    public static int getPlayerRank() {
+    public int getPlayerRank() {
         //return rank;
+        return this.playerRank;
     }
-    public static void setLocation(String location) {
+    public void setLocation(String location) {
         //set location
+        this.currentLocation = location;
     }
 
-    public static String getLocation() {
+    public String getLocation() {
         //return current location
+        return this.currentLocation;
     }
 
 
@@ -54,12 +61,12 @@ Public class Player {
         //act or rehearse for a specific player
     }
 
-    public static void move() {
+    public static void move(int playerID, String location) {
         //update Location 
     }
 
 
-    public static void upgrade() {
+    public static void upgrade(int playerID) {
         //check location for casting office
         //
     }
