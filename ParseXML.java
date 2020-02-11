@@ -12,13 +12,14 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import java.io.File;
+import java.util.ArrayList;
 
 public class ParseXML{
 
    
         // building a document from the XML file
         // returns a Document object after loading the book.xml file.
-        public static Document getDocFromFile(String filename)
+        public Document getDocFromFile(String filename)
         throws ParserConfigurationException{
         {
             
@@ -37,7 +38,7 @@ public class ParseXML{
         } // exception handling
         
         }  
-        public static String getSetName(Document d, int i) {
+        public String getSetName(Document d, int i) {
            Element root = d.getDocumentElement(); // <board> tag
             
             NodeList sets = root.getElementsByTagName("set");
@@ -46,6 +47,37 @@ public class ParseXML{
             return set.getAttributes().getNamedItem("name").getNodeValue();
                 
         }
+
+        public ArrayList<String> getNeighborArray(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<String> neighborArr = new ArrayList<String>();
+               
+            NodeList sets = root.getElementsByTagName("set");
+            //reads data from the nodes
+            Node set = sets.item(i);
+           
+            String setNeighbors = set.getAttributes().getNamedItem("name").getNodeValue();
+               
+            //reads data
+                                             
+            NodeList children = set.getChildNodes();
+               
+            for (int j=0; j< children.getLength(); j++){
+                  
+               Node sub = children.item(j);
+               
+               if("neighbors".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z=0; z< grandchildren.getLength(); z++) {
+                     Node neighbor = grandchildren.item(z);
+                     if("neighbor".equals(neighbor.getNodeName())) {  
+                        neighborArr.add(neighbor.getAttributes().getNamedItem("name").getNodeValue()); //populate neighbor arrayList                        
+                     }
+                  }   
+               }
+            }
+            return neighborArr;
+         }
 
 
 
