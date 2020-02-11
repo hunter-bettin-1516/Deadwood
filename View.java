@@ -3,7 +3,7 @@ import java.util.Scanner;
 
 public class View {
 
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
         // Scanner numPlayersScan = new Scanner(System.in);  
         // System.out.println("How many players?");
 
@@ -11,6 +11,9 @@ public class View {
 
         // int numPlayers = numPlayersStr;
 
+        Moderator mod = new Moderator();
+        mod.initializeGame();
+        
     }
 
 
