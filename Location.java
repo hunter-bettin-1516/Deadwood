@@ -6,5 +6,13 @@ public class Location {
 
     //getters and setters for attributes
 
+    public void setLocationName(String name) {
+        this.locationName = name;
+    }
+
+    public String getLocationName() {
+        return this.locationName;
+    }
+
 
 }

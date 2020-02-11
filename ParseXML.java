@@ -37,7 +37,18 @@ public class ParseXML{
         } // exception handling
         
         }  
-        
+        public static String getSetName(Document d, int i) {
+           Element root = d.getDocumentElement(); // <board> tag
+            
+            NodeList sets = root.getElementsByTagName("set");
+                
+            Node set = sets.item(i);
+            return set.getAttributes().getNamedItem("name").getNodeValue();
+                
+        }
+
+
+
         // reads data from XML file and prints data
         public static void readBoardData(Document d){
         

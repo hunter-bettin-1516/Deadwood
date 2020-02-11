@@ -14,6 +14,7 @@ public class Moderator {
     private int playerCount;
     private int dayCount = 1;
     private ParseXML xml = new ParseXML();
+    private Location[] locations = new Location[10];
 
     
     public void setPlayerCount(int count) {
@@ -25,7 +26,18 @@ public class Moderator {
         //loop creating multiple instances of players including ID,
         //parse board.xml to create multiple instances of location including name, neighbors, associated movie, etc.
        Document doc = xml.getDocFromFile("board.xml");
-       xml.readBoardData(doc);
+       //xml.readBoardData(doc);
+
+       for (int i = 0; i < 10; i++) {
+            String name = xml.getSetName(doc, i);
+            this.locations[i].setLocationName(name); 
+       }
+       
+       System.out.println(this.locations[0].getLocationName());
+
+       System.out.println(this.locations[1].getLocationName());
+
+       System.out.println(this.locations[5].getLocationName());
 
 
 
