@@ -4,7 +4,7 @@ public class Player {
     private int credits;
     private int dollars;
     private int playerID;
-    private int playerRank;
+    private int playerRank = 1;
     private int rehearsalCount = 0;
     private String currentLocation;
     private String currentRole;
@@ -38,7 +38,7 @@ public class Player {
     }
 
     public void setPlayerRank(int rank) {
-        //set rank
+        this.playerRank = rank;
     }
 
     public int getPlayerRank() {
