@@ -16,6 +16,15 @@ public class Movie extends Location {
         return this.movieBudget;
     }
 
+    public void setMovieTitle(String title) {
+        this.movieTitle = title;
+    }
+
+    public String getMovieTitle() {
+        return this.movieTitle;
+    }
+
+
     public void setMovie(ArrayList<String> movie) {
         this.movie = movie;
     }

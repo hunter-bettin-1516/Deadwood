@@ -37,7 +37,39 @@ public class ParseXML{
            return doc;
         } // exception handling
         
-        }  
+        } 
+        
+        public String getCardName(Document d, int i) {
+         Element root = d.getDocumentElement(); // <cards tag>
+         
+         NodeList cards = root.getElementsByTagName("card");
+             
+         Node card = cards.item(i);
+         return card.getAttributes().getNamedItem("name").getNodeValue();
+             
+       }
+
+       public ArrayList<Integer> getOnCardRolesArrayList(Document d, int i) {
+         Element root = d.getDocumentElement(); // <board> tag
+         ArrayList<Integer> partsArr = new ArrayList<Integer>();
+            
+         NodeList cards = root.getElementsByTagName("card");
+         
+         Node card = cards.item(i);
+                 
+         NodeList children = card.getChildNodes();
+            
+         for (int j=0; j< children.getLength(); j++){
+               
+            Node sub = children.item(j);
+            
+            if("part".equals(sub.getNodeName())){
+               partsArr.add(Integer.parseInt(sub.getAttributes().getNamedItem("level").getNodeValue())); //populate onCard arrayList                          
+            }
+         }
+         return partsArr;
+      }
+
         public String getSetName(Document d, int i) {
             Element root = d.getDocumentElement(); // <board> tag
             

@@ -5,6 +5,7 @@ public class Location {
     private ArrayList<String> neighbors;
     private ArrayList<Integer> offCardRoles; //part levels in integers
     private ArrayList<String> shotCounters;
+    private Movie movie;
 
     //getters and setters for attributes
 
@@ -38,6 +39,14 @@ public class Location {
 
     public ArrayList<String> getShotCounters() {
         return this.shotCounters;
+    }
+
+    public void setLocationsMovieCard(Movie movie) {
+        this.movie = movie;
+    }
+
+    public Movie getLocationsMovieCard() {
+        return this.movie;
     }
 
 
