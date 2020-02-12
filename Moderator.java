@@ -14,11 +14,13 @@ public class Moderator {
 
     private int playerCount;
     private int dayCount = 1;
+    private int maxDays = 4;
     private ParseXML xml = new ParseXML();
     private Location[] locations = new Location[11];
     private Movie[] movies = new Movie [40];
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
+    private Player[] players;
     
     public void setPlayerCount(int count) {
         this.playerCount = count;
@@ -75,49 +77,61 @@ public class Moderator {
         }
         //loop for testing data is being stored properly within location
         
-        for (int i = 0; i < 10; i++) {
-            //test locations[] attribute population except for trailer
-            System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
-            System.out.println("");
-            System.out.println(""); 
+        // for (int i = 0; i < 10; i++) {
+        //     //test locations[] attribute population except for trailer
+        //     System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
+        //     System.out.println("");
+        //     System.out.println(""); 
             
-            //test each location's linked random movie
-            System.out.println("this is " + this.locations[i].getLocationName() + "'s random movie card: '" + this.locations[i].getLocationsMovieCard().getMovieTitle() + "' and this is its list of roles and levels: " + this.locations[i].getLocationsMovieCard().getPartNameList() + " , " + this.locations[i].getLocationsMovieCard().getOnCardRolesList());
-            System.out.println("");
+        //     //test each location's linked random movie
+        //     System.out.println("this is " + this.locations[i].getLocationName() + "'s random movie card: '" + this.locations[i].getLocationsMovieCard().getMovieTitle() + "' and this is its list of roles and levels: " + this.locations[i].getLocationsMovieCard().getPartNameList() + " , " + this.locations[i].getLocationsMovieCard().getOnCardRolesList());
+        //     System.out.println("");
             
-            //test hashmap population         
-            System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
-            System.out.println("");
-            System.out.println("");
+        //     //test hashmap population         
+        //     System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
+        //     System.out.println("");
+        //     System.out.println("");
             
-        }
-        //test movie[] population
-        for (int i = 0; i < 40; i++) {
+        // }
+        // //test movie[] population
+        // for (int i = 0; i < 40; i++) {
             
-            System.out.println("these are the movieTitles: " +  this.movies[i].getMovieTitle() + " this is the movies budget: $" + this.movies[i].getMovieBudget());
-            System.out.println("");
-            System.out.println("");
-            System.out.println("these are the lists of onCard levels: " +  this.movies[i].getOnCardRolesList());
-            System.out.println(""); 
-            System.out.println("");
-        }
+        //     System.out.println("these are the movieTitles: " +  this.movies[i].getMovieTitle() + " this is the movies budget: $" + this.movies[i].getMovieBudget());
+        //     System.out.println("");
+        //     System.out.println("");
+        //     System.out.println("these are the lists of onCard levels: " +  this.movies[i].getOnCardRolesList());
+        //     System.out.println(""); 
+        //     System.out.println("");
+        // }
 
     }
 
-    public void gameSize(int count){
-        if(count < 4) {
-            //endGame.numDays == 3
+    public void inizializePlayers(int count) {
+        this.playerCount = count;
+        this.players = new Player[count];
+
+        for (int i = 0; i < count; i++) {
+            this.players[i] = new Player();
         }
-        if(count == 5){
-            //playerCredits +=2
+
+        if (count < 4) {
+            this.maxDays = 3;
+        } 
+        else if (count == 5) {
+            for (int i = 0; i < count; i++) {
+                this.players[i].setCredits(2);
+            }
         }
-        if(count == 6){
-            //playerCredits += 4
+        else if (count == 6) {
+            for (int i = 0; i < count; i++) {
+                this.players[i].setCredits(4);
+            }
+        } else {
+            for (int i = 0; i < count; i++) {
+                this.players[i].setPlayerRank(2);
+            }
         }
-        if(count >= 6){
-            //playerRank =+1
-        }
-    }   
+    }  
 
     public void newDay() {
         //this.daycount = this.dayCount + 1;
