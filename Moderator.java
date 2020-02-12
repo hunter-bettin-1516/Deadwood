@@ -15,6 +15,7 @@ public class Moderator {
     private int dayCount = 1;
     private ParseXML xml = new ParseXML();
     private Location[] locations = new Location[11];
+    private Movie[] movies = new Movie [40];
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
 
     
@@ -29,6 +30,21 @@ public class Moderator {
         for (int i = 0; i < 11; i++) {
             this.locations[i] = new Location(); 
         }
+        //populate array of Movies
+        for (int i = 0; i < 40; i++) {
+            this.movies[i] = new Movie(); 
+        }
+        //set proper movie attributes
+        for (int i = 0; i < 40; i++) {
+        // String movie = xml.getMovieName(doc2, i);
+             
+            // this.movie[i].setMovieName(movie); //set movie role name for each instance 
+ 
+            // ArrayList<String> movie = xml.getRoleArray(doc2, i);
+ 
+            // this.movie[i].setRole(movie);
+        }
+
         //set location name, neighbors, shot counters, and offcard roles for each instance
         for (int i = 0; i < 10; i++) {
             this.locations[i].setLocationName(xml.getSetName(doc, i)); 
@@ -58,13 +74,22 @@ public class Moderator {
             System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
         }
 
-
-
-
-
-
-
     }
+
+    public void gameSize(int count){
+        if(count < 4) {
+            //endGame.numDays == 3
+        }
+        if(count == 5){
+            //playerCredits +=2
+        }
+        if(count == 6){
+            //playerCredits += 4
+        }
+        if(count >= 6){
+            //playerRank =+1
+        }
+    }   
 
     public void newDay() {
         //this.daycount = this.dayCount + 1;
