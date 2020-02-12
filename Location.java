@@ -3,8 +3,8 @@ import java.util.*;
 public class Location {
     private String locationName;
     private ArrayList<String> neighbors;
-    private int[] offCardRoles;
-    private int[] shotCounters;
+    private ArrayList<Integer> offCardRoles; //part levels in integers
+    private ArrayList<String> shotCounters;
 
     //getters and setters for attributes
 
@@ -22,6 +22,22 @@ public class Location {
 
     public ArrayList<String> getNeighborList() {
         return this.neighbors;
+    }
+
+    public void setOffCardRoles(ArrayList<Integer> roles) {
+        this.offCardRoles = roles;
+    }
+
+    public ArrayList<Integer> getOffCardRolesList() {
+        return this.offCardRoles;
+    }
+
+    public void setShotCounters(ArrayList<String> counters) {
+        this.shotCounters = counters;
+    }
+
+    public ArrayList<String> getShotCounters() {
+        return this.shotCounters;
     }
 
 

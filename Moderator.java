@@ -14,7 +14,8 @@ public class Moderator {
     private int playerCount;
     private int dayCount = 1;
     private ParseXML xml = new ParseXML();
-    private Location[] locations = new Location[10];
+    private Location[] locations = new Location[11];
+    private HashMap<String, Location> locationMap = new HashMap<String, Location>();
 
     
     public void setPlayerCount(int count) {
@@ -22,32 +23,44 @@ public class Moderator {
     }
 
     public void initializeGame() throws Exception { 
-        //update player class based on group size
-        //loop creating multiple instances of players including ID,
-        //parse board.xml to create multiple instances of location including name, neighbors, associated movie, etc.
         Document doc = xml.getDocFromFile("board.xml");
-        //xml.readBoardData(doc);
         
-        for (int i = 0; i < 10; i++) {
-            this.locations[i] = new Location(); //populate array of locations
-            
-            String name = xml.getSetName(doc, i);
-            
-            this.locations[i].setLocationName(name); //set location name for each instance 
-
-            ArrayList<String> neighbors = xml.getNeighborArray(doc, i);
-
-            this.locations[i].setNeighbors(neighbors);
-
+        //populate array of locations
+        for (int i = 0; i < 11; i++) {
+            this.locations[i] = new Location(); 
         }
-       
-        System.out.println(this.locations[0].getLocationName());
+        //set location name, neighbors, shot counters, and offcard roles for each instance
+        for (int i = 0; i < 10; i++) {
+            this.locations[i].setLocationName(xml.getSetName(doc, i)); 
+            this.locations[i].setNeighbors(xml.getNeighborArrayList(doc, i));
+            this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
+            this.locations[i].setOffCardRoles(xml.getOffCardRolesArrayList(doc, i));
+        }
+        
+        //trailer is not a set so must be handled differently
+        this.locations[10].setLocationName("Trailer");
+        ArrayList<String> trailerNeighbors = new ArrayList<String>(
+            Arrays.asList("Main Station", "Saloon", "Hotel"));
+        this.locations[10].setNeighbors(trailerNeighbors);
 
-        System.out.println(this.locations[1].getLocationName());
+        //populate (HashMap)locationMap. Key = Location Name, Value = Location instance.
+        for (int i = 0; i < 11; i++) {
+            this.locationMap.put(this.locations[i].getLocationName(), this.locations[i]);
+        }
+        //loop for testing data is being stored properly within location
+        for (int i = 0; i < 11; i++) {
+            //test locations[] population
+            System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList()); // work in progress
+            System.out.println("");
+            System.out.println("");
+            System.out.println(""); 
+            //test hashmap population         
+            System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
+        }
 
-        System.out.println(this.locations[5].getLocationName());
 
-        System.out.println(this.locations[0].getNeighborList()); // work in progress
+
+
 
 
 
