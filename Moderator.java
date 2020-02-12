@@ -54,9 +54,10 @@ public class Moderator {
             //populate a random movie to each location
             boolean findNewCard = true;
             while (findNewCard == true) {
-                if(this.locations[i].getUsedMovie() == false) {
-                    this.locations[i].setLocationsMovieCard(this.movies[random.nextInt(40)]);
-                    this.locations[i].setUsedMovie(true);
+                int rand = random.nextInt(40);
+                if(this.movies[rand].getUsedMovie() == false) { 
+                    this.locations[i].setLocationsMovieCard(this.movies[rand]);
+                    this.movies[rand].setUsedMovie(true);
                     findNewCard = false;
                 }
             }
@@ -73,15 +74,16 @@ public class Moderator {
             this.locationMap.put(this.locations[i].getLocationName(), this.locations[i]);
         }
         //loop for testing data is being stored properly within location
-         for (int i = 0; i < 10; i++) {
+        
+        for (int i = 0; i < 10; i++) {
             //test locations[] attribute population except for trailer
             System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
             System.out.println("");
             System.out.println(""); 
+            
             //test each location's linked random movie
             System.out.println("this is " + this.locations[i].getLocationName() + "'s random movie card: '" + this.locations[i].getLocationsMovieCard().getMovieTitle() + "' and this is its list of roles and levels: " + this.locations[i].getLocationsMovieCard().getPartNameList() + " , " + this.locations[i].getLocationsMovieCard().getOnCardRolesList());
             System.out.println("");
-            System.out.println(""); 
             
             //test hashmap population         
             System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
