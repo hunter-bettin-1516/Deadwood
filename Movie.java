@@ -6,6 +6,7 @@ public class Movie extends Location {
     private String[] movieRolesName;
     private ArrayList<String> partNameList;
     private ArrayList<Integer> onCardroles;
+    private boolean usedMovie = false; //flag for duplicate movies when shuffling random movie cards to each location
 
     //getters and setters for these attributes
     public void setMovieBudget(int budget) {
@@ -38,6 +39,14 @@ public class Movie extends Location {
 
     public ArrayList<Integer> getOnCardRolesList() {
         return this.onCardroles;
+    }
+
+    public void setUsedMovie(boolean t) {
+        this.usedMovie = t;
+    }
+
+    public boolean getUsedMovie() {
+        return this.usedMovie;
     }
 
 }
