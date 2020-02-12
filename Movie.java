@@ -4,8 +4,8 @@ public class Movie extends Location {
     private int movieBudget;
     private String movieTitle;
     private String[] movieRolesName;
-    private ArrayList<String> movie;
-    private ArrayList<Integer> role;
+    private ArrayList<String> partNameList;
+    private ArrayList<Integer> onCardroles;
 
     //getters and setters for these attributes
     public void setMovieBudget(int budget) {
@@ -24,21 +24,20 @@ public class Movie extends Location {
         return this.movieTitle;
     }
 
-
-    public void setMovie(ArrayList<String> movie) {
-        this.movie = movie;
+    public void setPartNameList(ArrayList<String> parts) {
+        this.partNameList = parts;
     }
 
-    public ArrayList<String> getMovieList() {
-        return this.movie;
+    public ArrayList<String> getPartNameList() {
+        return this.partNameList;
     }
     
-    public void setRole(ArrayList<Integer> role) {
-        this.role = role;
+    public void setOnCardRolesList(ArrayList<Integer> roles) {
+        this.onCardroles = roles;
     }
 
-    public ArrayList<Integer> getRoleList() {
-        return this.role;
+    public ArrayList<Integer> getOnCardRolesList() {
+        return this.onCardroles;
     }
 
 }

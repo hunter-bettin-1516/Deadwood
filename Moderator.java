@@ -39,7 +39,9 @@ public class Moderator {
         //set proper movie attributes
         for (int i = 0; i < 40; i++) {
             this.movies[i].setMovieTitle(xml.getCardName(cardDoc, i)); //set movie role name for each instance 
-            this.movies[i].setRole(xml.getOnCardRolesArrayList(cardDoc, i)); //set oncard role 
+            this.movies[i].setOnCardRolesList(xml.getOnCardRolesArrayList(cardDoc, i)); //set oncard role 
+            this.movies[i].setMovieBudget(xml.getBudget(cardDoc, i)); //set movie budget
+            this.movies[i].setPartNameList(xml.getPartNamesArrayList(cardDoc, i)); //set oncard role name
         }
 
         //set location name, neighbors, shot counters, and offcard roles for each instance
@@ -48,9 +50,16 @@ public class Moderator {
             this.locations[i].setNeighbors(xml.getNeighborArrayList(doc, i));
             this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
             this.locations[i].setOffCardRoles(xml.getOffCardRolesArrayList(doc, i));
+            
             //populate a random movie to each location
-            int randomMovieIndex = random.nextInt(40);
-            this.locations[i].setLocationsMovieCard(this.movies[randomMovieIndex]);
+            boolean findNewCard = true;
+            while (findNewCard == true) {
+                if(this.locations[i].getUsedMovie() == false) {
+                    this.locations[i].setLocationsMovieCard(this.movies[random.nextInt(40)]);
+                    this.locations[i].setUsedMovie(true);
+                    findNewCard = false;
+                }
+            }
         }
         
         //trailer is not a set so must be handled differently
@@ -64,26 +73,29 @@ public class Moderator {
             this.locationMap.put(this.locations[i].getLocationName(), this.locations[i]);
         }
         //loop for testing data is being stored properly within location
-        for (int i = 0; i < 11; i++) {
-            //test locations[] attribute population
+         for (int i = 0; i < 10; i++) {
+            //test locations[] attribute population except for trailer
             System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
             System.out.println("");
+            System.out.println(""); 
+            //test each location's linked random movie
+            System.out.println("this is " + this.locations[i].getLocationName() + "'s random movie card: '" + this.locations[i].getLocationsMovieCard().getMovieTitle() + "' and this is its list of roles and levels: " + this.locations[i].getLocationsMovieCard().getPartNameList() + " , " + this.locations[i].getLocationsMovieCard().getOnCardRolesList());
             System.out.println("");
             System.out.println(""); 
+            
             //test hashmap population         
             System.out.println("these are the neighbors using the HashMap: " + this.locationMap.get(this.locations[i].getLocationName()).getNeighborList());
             System.out.println("");
             System.out.println("");
-            System.out.println(""); 
             
         }
-
+        //test movie[] population
         for (int i = 0; i < 40; i++) {
-            //test movie[] population
-            System.out.println("these are the movieTitles: " +  this.movies[i].getMovieTitle());
+            
+            System.out.println("these are the movieTitles: " +  this.movies[i].getMovieTitle() + " this is the movies budget: $" + this.movies[i].getMovieBudget());
             System.out.println("");
             System.out.println("");
-            System.out.println("these are the lists of onCard levels: " +  this.movies[i].getRoleList());
+            System.out.println("these are the lists of onCard levels: " +  this.movies[i].getOnCardRolesList());
             System.out.println(""); 
             System.out.println("");
         }

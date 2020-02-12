@@ -6,8 +6,16 @@ public class Location {
     private ArrayList<Integer> offCardRoles; //part levels in integers
     private ArrayList<String> shotCounters;
     private Movie movie;
+    private boolean usedMovie = false; //flag for duplicate movies when shuffling random movie cards to each location
 
     //getters and setters for attributes
+    public void setUsedMovie(boolean t) {
+        this.usedMovie = t;
+    }
+
+    public boolean getUsedMovie() {
+        return this.usedMovie;
+    }
 
     public void setLocationName(String name) {
         this.locationName = name;
