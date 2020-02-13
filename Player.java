@@ -3,20 +3,40 @@ import java.util.Random;
 public class Player {
     private int credits;
     private int dollars;
-    private int playerID;
+    private String playerID;
     private int playerRank = 1;
     private int rehearsalCount = 0;
-    private String currentLocation;
-    private String currentRole;
+    private String currentLocation = "Trailer";
+    private String currentRole = "No role";
 
-    public void setPlayerID(int ID) {
+    public void setPlayerID(String ID) {
         //set playerID;
         this.playerID = ID;
     }
 
-    public int getPlayerID() {
+    public String getPlayerID() {
         //return playerID;
         return this.playerID;
+    }
+
+    public void setRole(String role) {
+        //set playerID;
+        this.currentRole = role;
+    }
+
+    public int getRehearsalCount() {
+        //return playerID;
+        return this.rehearsalCount;
+    }
+
+    public void setRehearsalCount(int count) {
+        //set playerID;
+        this.rehearsalCount = count;
+    }
+
+    public String getRole() {
+        //return playerID;
+        return this.currentRole;
     }
 
     public void setDollars(int dollars) {
@@ -29,7 +49,7 @@ public class Player {
     }
 
     public void setCredits(int credits) {
-        //set credits
+        this.credits = credits;
     }
 
     public int getCredits() {
