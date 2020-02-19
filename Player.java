@@ -8,6 +8,8 @@ public class Player {
     private int rehearsalCount = 0;
     private String currentLocation = "Trailer";
     private String currentRole = "No role";
+    private boolean onCard = false;
+    private boolean working = false;
 
     public void setPlayerID(String ID) {
         //set playerID;
@@ -24,6 +26,22 @@ public class Player {
         this.currentRole = role;
     }
 
+    public boolean getOnCard() {
+        return this.onCard;
+    }
+
+    public void setOnCard(boolean t) {
+        this.onCard = t;
+    }
+
+    public boolean getWorking() {
+        return this.working;
+    }
+
+    public void setWorking(boolean t) {
+        this.working = t;
+    }
+
     public int getRehearsalCount() {
         //return playerID;
         return this.rehearsalCount;
@@ -33,6 +51,7 @@ public class Player {
         //set playerID;
         this.rehearsalCount = count;
     }
+
 
     public String getRole() {
         //return playerID;
