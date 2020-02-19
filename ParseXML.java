@@ -164,4 +164,25 @@ public class ParseXML{
             }
             return partsArr;
          }
+
+         public ArrayList<String> getOffCardPartsArrayList(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<String> partsArr = new ArrayList<String>(); 
+            NodeList sets = root.getElementsByTagName("set");
+            Node set = sets.item(i);      
+            NodeList children = set.getChildNodes(); 
+            for (int j=0; j< children.getLength(); j++){   
+               Node sub = children.item(j);
+               if("parts".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z=0; z< grandchildren.getLength(); z++) {
+                     Node part = grandchildren.item(z);
+                     if("part".equals(part.getNodeName())) {  
+                        partsArr.add(part.getAttributes().getNamedItem("name").getNodeValue()); //populate offCardParts arrayList                        
+                     }
+                  }   
+               }
+            }
+            return partsArr;
+         }
 }//class

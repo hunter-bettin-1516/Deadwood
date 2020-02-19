@@ -1,12 +1,12 @@
 import java.util.*;
-public class Movie extends Location {
+public class Movie {
     private boolean movieIsAWrap = false;
     private int movieBudget;
     private String movieTitle;
-    private String[] movieRolesName;
-    private ArrayList<String> partNameList;
-    private ArrayList<Integer> onCardroles;
+    private ArrayList<String> partNameList; //
+    private ArrayList<Integer> onCardroles; // ranks
     private boolean usedMovie = false; //flag for duplicate movies when shuffling random movie cards to each location
+    private ArrayList<Integer> onCardWorkers; //stores the index of the player index that is on this locations OnCard role
 
     //getters and setters for these attributes
     public void setMovieBudget(int budget) {
@@ -49,4 +49,17 @@ public class Movie extends Location {
         return this.usedMovie;
     }
 
+    public ArrayList<Integer> getOnCardWorkers() {
+        return this.onCardWorkers;
+    }
+
+    public void addOnCardWorker(int ID) {
+        this.onCardWorkers.add(ID);
+    }
+
+    public void resetOnCardWorkerList() {
+        for (int i = 0; i < this.onCardWorkers.size(); i++) {
+            this.onCardWorkers.remove(i);
+        }
+    }
 }

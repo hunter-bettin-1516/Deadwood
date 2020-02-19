@@ -15,16 +15,61 @@ public class Moderator {
     private int playerCount; //length of players[]
     private int dayCount = 1;
     private int maxDays = 4;
+    private boolean gameOver = false;
+    private int activeMovies = 10; //comparison for new day... decrement when locations[i].movie.isAWrap == true;
     private ParseXML xml = new ParseXML();
     private Location[] locations = new Location[11];
     private Movie[] movies = new Movie [40];
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
     private Player[] players = new Player[8];
+    
+    public ArrayList<String> getOnCardRoles(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList();
+    }
 
+    public ArrayList<Integer> getOnCardRanks(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardRolesList();
+    }
+
+    public ArrayList<String> getOffCardRoles(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getPartNameList();
+    }
+
+    public ArrayList<Integer> getOffCardRanks(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getOffCardRolesList();
+    }
+
+    public String getMovieTitle(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getMovieTitle();
+    }
+
+    public int getMovieBudget(int i) {
+        return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getMovieBudget();
+    }
+
+    public void setGameOver(boolean t) {
+        this.gameOver = t;
+    }
+
+    public boolean getGameOver() {
+        return this.gameOver;
+    }
 
     public void setPlayerCount(int count) {
         this.playerCount = count;
+    }
+
+    public String getPlayerName(int i) {
+        return this.players[i].getPlayerID();
+    }
+
+    public ArrayList<String> getPlayersNeighbors(int i){
+        return locationMap.get(players[i].getLocation()).getNeighborList();
+    }
+
+    public boolean getIsPlayerWorking(int i) {
+        return players[i].getWorking();
     }
 
     public void initializeGame() throws Exception { 
@@ -53,6 +98,7 @@ public class Moderator {
             this.locations[i].setNeighbors(xml.getNeighborArrayList(doc, i));
             this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
             this.locations[i].setOffCardRoles(xml.getOffCardRolesArrayList(doc, i));
+            this.locations[i].setPartNameList(xml.getOffCardPartsArrayList(doc, i));
             
             //populate a random movie to each location
             boolean findNewCard = true;
@@ -69,7 +115,7 @@ public class Moderator {
         //trailer is not a set so must be handled differently
         this.locations[10].setLocationName("Trailer");
         ArrayList<String> trailerNeighbors = new ArrayList<String>(
-            Arrays.asList("Main Station", "Saloon", "Hotel"));
+            Arrays.asList("Main Street", "Saloon", "Hotel"));
         this.locations[10].setNeighbors(trailerNeighbors);
 
         //populate (HashMap)locationMap. Key = Location Name, Value = Location instance.
@@ -101,6 +147,26 @@ public class Moderator {
     public String displayPlayerStats(int i) {
         String stats = "It is " + players[i].getPlayerID() + "'s turn. ||| Current Location = " + players[i].getLocation() + " ||| Current role = " + players[i].getRole() + " ||| Rehearsal chips = " + players[i].getRehearsalCount() + " ||| Rank = " + players[i].getPlayerRank() + " ||| Dollars = " + players[i].getDollars() + " ||| Credits = " + players[i].getCredits(); 
         return stats;
+    }
+
+    public void setPlayerRole(String role, int i) {
+         //left off here
+         System.out.println("good work team");
+    }
+    public void work(int playerID, String decision) {
+        //act or rehearse for a specific player
+    }
+
+    public void move(String location, int i) {
+        //update Location 
+        players[i].setLocation(location);
+
+
+    }
+
+
+    public void upgrade(int playerID) {
+        //check location for casting office
     }
 
     public void newDay() throws Exception {
@@ -136,7 +202,7 @@ public class Moderator {
         //loop for testing data is being stored properly within location
         for (int i = 0; i < 10; i++) {
             //test locations[] attribute population except for trailer
-            System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
+            System.out.println("this is the name: " + this.locations[i].getLocationName() + " ||| these are the neighbors: " + this.locations[i].getNeighborList() + " ||| these are shotcounters: " + this.locations[i].getShotCounters() + " ||| these are the offCardRole levels: " + this.locations[i].getOffCardRolesList() + " ||| these are the offCardRole names: " + this.locations[i].getPartNameList() + " ||| this is this locations random movie card: " + this.locations[i].getLocationsMovieCard().getMovieTitle()); //null pointer due to no movieCard assigned to trailer
             System.out.println("");
             System.out.println(""); 
             
@@ -162,8 +228,6 @@ public class Moderator {
             System.out.println("");
             System.out.println("these are the lists of onCard levels: " +  this.movies[i].getOnCardRolesList());
             System.out.println(""); 
-            System.out.println(""); 
-            
         }
     }
 
