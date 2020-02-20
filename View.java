@@ -26,24 +26,47 @@ public class View {
                 if (mod.getIsPlayerWorking(i) == true) {
                     
                     //currently working stuff
+                    System.out.println("This is the movie: " + mod.getMovieTitle(i) + "'s budget: $" + mod.getMovieBudget(i));
+                    System.out.println("Would you like to 'act' or 'rehearse'?");
+                    String actOrRehearse = scan.nextLine();
+                    mod.work(actOrRehearse, scan, i);
 
                 } else {
                     System.out.println("What is " + mod.getPlayerName(i) + "'s decision? ('move', 'take a role', 'upgrade')");
                     //repear take a role code here
                     String decision = scan.nextLine();
                     if (decision.equals("move") || decision.equals("Move")) {
-                        System.out.println("You can move to these locations: " + mod.getPlayersNeighbors(i) + ". Where would you like to go?");
+                        System.out.println('\n' + "You can move to these locations: " + mod.getPlayersNeighbors(i) + ". Where would you like to go?");
                         String newLocation = scan.nextLine();
-                        mod.move(newLocation, i);
-                        System.out.println("You have moved to " + newLocation + ", filming " + mod.getMovieTitle(i) + " with a budget of $" + mod.getMovieBudget(i));
-                        System.out.println("Would you like to 'take a role' or 'stay' on location: " + newLocation + "?");
+                        mod.move(newLocation, i); //update player location
+                        System.out.println('\n' + "You have moved to " + newLocation + ", filming: " + mod.getMovieTitle(i) + " with a budget of $" + mod.getMovieBudget(i) + '\n');
+                        System.out.println("Here is the list of main roles followed by the list of their required ranks: " + mod.getOnCardRoles(i) +", " + mod.getOnCardRanks(i) + '\n');
+                        System.out.println("Here is the list of supporting roles followed by the list of their required ranks: " + mod.getOffCardRoles(i) + ", " + mod.getOffCardRanks(i) + '\n');
+                        System.out.println("Would you like to 'take a role' or 'stay' on location: " + newLocation + "? (Your rank must be >= the role rank.)");
                         String takeRoleOrStay = scan.nextLine();
                         if (takeRoleOrStay.equals("take a role")) {
-                            System.out.println("Here is the list of main roles followed by the list of their required ranks: " + mod.getOnCardRoles(i) +", " + mod.getOnCardRanks(i));
-                            System.out.println("Here is the list of supporting roles followed by the list of their required ranks: " + mod.getOffCardRoles(i) + ", " + mod.getOffCardRanks(i));
-                            System.out.println("What is the name of the role that you would like to take?");   
-                            String role = scan.nextLine();
-                            mod.setPlayerRole(role, i);
+                            //while loop for if user chooses a role that requires a higher rank than what they have
+                            String onOrOff = "";
+                            String role = "";
+                            boolean validRole = false;
+                            int j = 0;
+                            while (validRole == false) {
+                                if (j == 0) {
+                                    System.out.println("Would you like to take a 'main role' or 'supporting role?' ");
+                                    onOrOff = scan.nextLine();
+                                    System.out.println("What is the name of the role that you would like to take?");   
+                                } else {
+                                    System.out.println("You do not have the required Rank to take that role.");
+                                    System.out.println("Would you like to take a 'main role' or 'supporting role?' ");
+                                    onOrOff = scan.nextLine();
+                                    System.out.println("What is the name of the role that you would like to take?");  
+                                }
+                                role = scan.nextLine();
+                                validRole = mod.verifyRole(onOrOff, role, i);
+                                j++;
+                            }
+                            mod.setPlayerRole(onOrOff, role, i);
+                            System.out.println("Turn Over");
                         } else {
                             System.out.println("Turn Over");
                         }

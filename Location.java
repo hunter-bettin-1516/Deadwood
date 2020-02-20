@@ -2,12 +2,14 @@ import java.util.*;
 
 public class Location {
     private String locationName;
-    private ArrayList<String> neighbors;
-    private ArrayList<Integer> offCardRoles; //part levels in integers
-    private ArrayList<String> partNameList;
-    private ArrayList<String> shotCounters;
+    private ArrayList<String> neighbors = new ArrayList<String>();
+    private ArrayList<Integer> offCardRoles = new ArrayList<Integer>(); //part levels in integers
+    private ArrayList<String> partNameList = new ArrayList<String>();
+    private ArrayList<Integer> offCardRolesCopy = new ArrayList<Integer>(); //part levels in integers
+    private ArrayList<String> partNameListCopy = new ArrayList<String>();
+    private ArrayList<String> shotCounters = new ArrayList<String>();
     private Movie movie;
-    private ArrayList<Integer> offCardWorkers; //stores the index of the player index that is on this locations offCard role
+    private ArrayList<Integer> offCardWorkers = new ArrayList<Integer>(); //stores the index of the player index that is on this locations offCard role
 
     //getters and setters for attributes
 
@@ -31,6 +33,14 @@ public class Location {
         this.offCardRoles = roles;
     }
 
+    public ArrayList<Integer> getOffCardRolesListCopy() {
+        return this.offCardRoles;
+    }
+
+    public void setOffCardRolesCopy(ArrayList<Integer> roles) {
+        this.offCardRolesCopy = roles;
+    }
+
     public ArrayList<Integer> getOffCardRolesList() {
         return this.offCardRoles;
     }
@@ -43,8 +53,12 @@ public class Location {
         return this.partNameList;
     }
 
-    public void setShotCounters(ArrayList<String> counters) {
-        this.shotCounters = counters;
+    public void setPartNameListCopy(ArrayList<String> parts) {
+        this.partNameListCopy = parts;
+    }
+
+    public ArrayList<String> getPartNameListCopy() {
+        return this.partNameListCopy;
     }
 
     public ArrayList<Integer> getOffCardWorkers() {
@@ -64,6 +78,15 @@ public class Location {
     public ArrayList<String> getShotCounters() {
         return this.shotCounters;
     }
+
+    public void removeShotCounter() {
+        this.shotCounters.remove(this.shotCounters.size() - 1);
+    }
+
+    public void setShotCounters(ArrayList<String> counters) {
+        this.shotCounters = counters;
+    }
+        
 
     public void setLocationsMovieCard(Movie movie) {
         this.movie = movie;

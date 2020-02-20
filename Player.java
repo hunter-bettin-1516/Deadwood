@@ -43,23 +43,28 @@ public class Player {
     }
 
     public int getRehearsalCount() {
-        //return playerID;
         return this.rehearsalCount;
     }
 
-    public void setRehearsalCount(int count) {
-        //set playerID;
-        this.rehearsalCount = count;
+    public void incrementRehearsalCount() {
+        this.rehearsalCount = this.rehearsalCount + 1;
+    }
+
+    public void resetRehearsalCount() {
+        this.rehearsalCount = 0;
     }
 
 
     public String getRole() {
-        //return playerID;
         return this.currentRole;
     }
 
     public void setDollars(int dollars) {
-        //set dollars
+        this.dollars = dollars;
+    }
+
+    public void addDollars(int dollars) {
+        this.dollars = this.dollars + dollars;
     }
 
     public int getDollars() {
@@ -69,6 +74,10 @@ public class Player {
 
     public void setCredits(int credits) {
         this.credits = credits;
+    }
+
+    public void addCredits(int credits) {
+        this.credits = this.credits + credits;
     }
 
     public int getCredits() {
@@ -94,20 +103,5 @@ public class Player {
         return this.currentLocation;
     }
 
-
-
-    public static void work(int playerID, String decision) {
-        //act or rehearse for a specific player
-    }
-
-    public static void move(int playerID, String location) {
-        //update Location 
-    }
-
-
-    public static void upgrade(int playerID) {
-        //check location for casting office
-        //
-    }
-
 }
+
