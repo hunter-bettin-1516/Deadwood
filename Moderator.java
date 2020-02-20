@@ -23,6 +23,7 @@ public class Moderator {
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
     private Player[] players = new Player[8];
+    private PayoutPackage payPackage = new PayoutPackage();
     
     public ArrayList<String> getOnCardRoles(int i) {
         return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList();
@@ -88,8 +89,10 @@ public class Moderator {
         for (int i = 0; i < 40; i++) {
             this.movies[i].setMovieTitle(xml.getCardName(cardDoc, i)); //set movie role name for each instance 
             this.movies[i].setOnCardRolesList(xml.getOnCardRolesArrayList(cardDoc, i)); //set oncard role 
+            this.movies[i].setOnCardRolesListCopy(xml.getOnCardRolesArrayList(cardDoc, i));
             this.movies[i].setMovieBudget(xml.getBudget(cardDoc, i)); //set movie budget
             this.movies[i].setPartNameList(xml.getPartNamesArrayList(cardDoc, i)); //set oncard role name
+            this.movies[i].setPartNameListCopy(xml.getPartNamesArrayList(cardDoc, i));
         }
 
         //set location name, neighbors, shot counters, and offcard roles for each instance
@@ -98,7 +101,9 @@ public class Moderator {
             this.locations[i].setNeighbors(xml.getNeighborArrayList(doc, i));
             this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
             this.locations[i].setOffCardRoles(xml.getOffCardRolesArrayList(doc, i));
+            this.locations[i].setOffCardRolesCopy(xml.getOffCardRolesArrayList(doc, i));
             this.locations[i].setPartNameList(xml.getOffCardPartsArrayList(doc, i));
+            this.locations[i].setPartNameListCopy(xml.getOffCardPartsArrayList(doc, i));
             
             //populate a random movie to each location
             boolean findNewCard = true;
@@ -149,19 +154,111 @@ public class Moderator {
         return stats;
     }
 
-    public void setPlayerRole(String role, int i) {
-         //left off here
-         System.out.println("good work team");
+    public void setPlayerRole(String onOrOff, String role, int i) {
+        if(onOrOff.equals("main role")){
+            this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().addOnCardWorker(i);
+            this.players[i].setOnCard(true);
+            int roleIndex = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList().indexOf(role);
+            this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardRolesList().remove(roleIndex); //remove role and role rank for future actors
+            this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList().remove(roleIndex);
+        } else if (onOrOff.equals("supporting role")) {
+            this.locationMap.get(this.players[i].getLocation()).addOffCardWorker(i);
+            int roleIndex = this.locationMap.get(this.players[i].getLocation()).getPartNameList().indexOf(role);
+            this.locationMap.get(this.players[i].getLocation()).getOffCardRolesList().remove(roleIndex); //remove role and role rank for future actors
+            this.locationMap.get(this.players[i].getLocation()).getPartNameList().remove(roleIndex);
+        }
+        this.players[i].setRole(role);
+        this.players[i].setWorking(true);
     }
-    public void work(int playerID, String decision) {
+
+    public boolean verifyRole(String onOrOff, String role, int i){
+        if (onOrOff.equals("main role")) {
+            int roleIndex = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList().indexOf(role);
+            int roleRank = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardRolesList().get(roleIndex);
+            if ((this.players[i].getPlayerRank()) >= roleRank ){
+                return true;
+            }
+        } else if (onOrOff.equals("supporting role")) {
+            int roleIndex = this.locationMap.get(this.players[i].getLocation()).getPartNameList().indexOf(role);
+            int roleRank = this.locationMap.get(this.players[i].getLocation()).getOffCardRolesList().get(roleIndex);
+            if ((this.players[i].getPlayerRank()) >= roleRank) {
+                return true;
+            }
+        }
+        return false;
+    } 
+
+    public void work(String decision, Scanner scan, int i) {
         //act or rehearse for a specific player
+        int movieBudget = locationMap.get(players[i].getLocation()).getLocationsMovieCard().getMovieBudget();
+        int roll = 0;
+        if (decision.equals("act")) {
+            System.out.println("Type 'roll' to roll the dice and perform your role.");
+            
+            boolean correctInput = false;
+            while (correctInput == false) {
+                String input = scan.next();
+                if (input.equals("roll")) {
+                    roll = random.nextInt(6);
+                    correctInput = true;
+                    roll++;
+                }
+            }
+            if ((roll + players[i].getRehearsalCount()) >=  movieBudget) {
+                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + players[i].getRehearsalCount() + ". Act Successful!");
+                this.SuccessfulAct(i);
+            } else {
+                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + players[i].getRehearsalCount() + ". Act Unsuccessful. Sucks.");
+            }
+        } else if (decision.equals("rehearse")) {
+            if (this.players[i].getRehearsalCount() == movieBudget) {
+                System.out.println("Your rehearsal count is equal to the movie budget, acting success is guarenteed. baby.");
+                this.work("act", scan, i);
+            } else {
+                this.players[i].incrementRehearsalCount();
+                System.out.println("Your current rehearsal count is: " + this.players[i].getRehearsalCount() + ".");
+                System.out.println("Turn Over.");
+            }
+        }
+    }
+
+    public void SuccessfulAct(int i) {
+        this.locationMap.get(this.players[i].getLocation()).removeShotCounter(); // remove shotcounter
+        System.out.println("'\n' These are the remaining shotcounters: " + this.locationMap.get(this.players[i].getLocation()).getShotCounters());
+        //check to see if movie is a wrap
+        if (this.locationMap.get(this.players[i].getLocation()).getShotCounters().size() == 0) {
+            this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().setMovieIsAWrap(true);
+            this.activeMovies--; 
+            //if only one movie card left, start new day
+            if (this.activeMovies == 1) {
+                try {
+                    this.newDay();
+                } catch (Exception e) {
+                    System.out.println("newDay() is bugged");
+                }
+            } else {
+                //check if people are working on card
+                ArrayList<Integer> onCardWorkerList = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardWorkers();
+                ArrayList<Integer> offCardWorkerList = this.locationMap.get(this.players[i].getLocation()).getOffCardWorkers();
+                if (onCardWorkerList.size() > 0) {
+                    //this.payPackage.onCardPayout(onCardWorkerList);
+                } else if (offCardWorkerList.size() > 0) {
+                    this.payPackage.offCardPayout(offCardWorkerList, this.locationMap, this.players);
+                }
+            }
+        } else {
+            if (this.players[i].getOnCard() == true) {
+                this.players[i].addCredits(2);
+            } else {
+                this.players[i].addCredits(1);
+                this.players[i].addDollars(1);
+            }
+        }
     }
 
     public void move(String location, int i) {
         //update Location 
         players[i].setLocation(location);
-
-
     }
 
 
@@ -172,25 +269,28 @@ public class Moderator {
     public void newDay() throws Exception {
         Document doc = xml.getDocFromFile("board.xml");
         this.dayCount = this.dayCount + 1;
-        //reset board
-        for (int i = 0; i < playerCount; i++) {
-            this.players[i].setLocation("Trailer");
-        }
-        //reshuffle new movie cards to locations
-        for (int i = 0; i < 10; i++) {
-            this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
-            boolean findNewCard = true;
-            while (findNewCard == true) {
-                int rand = random.nextInt(40);
-                if(this.movies[rand].getUsedMovie() == false) { 
-                    this.locations[i].setLocationsMovieCard(this.movies[rand]);
-                    this.movies[rand].setUsedMovie(true);
-                    findNewCard = false;
+        if (this.dayCount == this.maxDays) {
+            //this.endGame
+        } else {
+            //reset board put players back to trailer
+            for (int i = 0; i < playerCount; i++) {
+                this.players[i].setLocation("Trailer");
+            }
+            //reshuffle new movie cards to locations
+            for (int i = 0; i < 10; i++) {
+                this.locations[i].setShotCounters(xml.getShotCountersArrayList(doc, i));
+                boolean findNewCard = true;
+                while (findNewCard == true) {
+                    int rand = random.nextInt(40);
+                    if(this.movies[rand].getUsedMovie() == false) { 
+                        this.locations[i].setLocationsMovieCard(this.movies[rand]);
+                        this.movies[rand].setUsedMovie(true);
+                        findNewCard = false;
+                    }
                 }
+                this.locations[i].getLocationsMovieCard().setMovieIsAWrap(false);
             }
         }
-
-
     }
 
     public void playerDecision(int playerID, String decision) {
