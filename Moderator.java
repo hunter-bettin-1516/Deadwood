@@ -23,7 +23,10 @@ public class Moderator {
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
     private Player[] players = new Player[8];
+    private int[] finalScores = new int[8];
     private PayoutPackage payPackage = new PayoutPackage();
+    private CastingOffice castOffice = new CastingOffice();
+    private int winner = -1;
     
     public ArrayList<String> getOnCardRoles(int i) {
         return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList();
@@ -66,11 +69,11 @@ public class Moderator {
     }
 
     public ArrayList<String> getPlayersNeighbors(int i){
-        return locationMap.get(players[i].getLocation()).getNeighborList();
+        return this.locationMap.get(players[i].getLocation()).getNeighborList();
     }
 
     public boolean getIsPlayerWorking(int i) {
-        return players[i].getWorking();
+        return this.players[i].getWorking();
     }
 
     public void initializeGame() throws Exception { 
@@ -148,6 +151,10 @@ public class Moderator {
                 this.players[i].setPlayerRank(2);
         }
     }
+
+    public void upgradeAtOffice(String toRank, String dollarsOrCredits, int i) {
+        this.castOffice.upgradeRank(toRank, dollarsOrCredits, i, players);
+    }
     
     public String displayPlayerStats(int i) {
         String stats = "It is " + players[i].getPlayerID() + "'s turn. ||| Current Location = " + players[i].getLocation() + " ||| Current role = " + players[i].getRole() + " ||| Rehearsal chips = " + players[i].getRehearsalCount() + " ||| Rank = " + players[i].getPlayerRank() + " ||| Dollars = " + players[i].getDollars() + " ||| Credits = " + players[i].getCredits(); 
@@ -188,64 +195,63 @@ public class Moderator {
         return false;
     } 
 
-    public void work(String decision, Scanner scan, int i) {
+    public void work(String decision, int i) {
         //act or rehearse for a specific player
         int movieBudget = locationMap.get(players[i].getLocation()).getLocationsMovieCard().getMovieBudget();
         int roll = 0;
         if (decision.equals("act")) {
-            System.out.println("Type 'roll' to roll the dice and perform your role.");
-            
-            boolean correctInput = false;
-            while (correctInput == false) {
-                String input = scan.next();
-                if (input.equals("roll")) {
-                    roll = random.nextInt(6);
-                    correctInput = true;
-                    roll++;
-                }
-            }
-            if ((roll + players[i].getRehearsalCount()) >=  movieBudget) {
-                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + players[i].getRehearsalCount() + ". Act Successful!");
+            roll = random.nextInt(6) + 1;
+            if ((roll + this.players[i].getRehearsalCount()) >=  movieBudget) {
+                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + this.players[i].getRehearsalCount() + ". Act Successful!");
                 this.SuccessfulAct(i);
             } else {
-                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + players[i].getRehearsalCount() + ". Act Unsuccessful. Sucks.");
+                System.out.println("You rolled a: " + roll + ". With a rehearsal count of: " + this.players[i].getRehearsalCount() + ". Act Unsuccessful. Sucks.");
+                offCardFailedRoll(i);
+                System.out.println("Turn Over.");
             }
         } else if (decision.equals("rehearse")) {
             if (this.players[i].getRehearsalCount() == movieBudget) {
                 System.out.println("Your rehearsal count is equal to the movie budget, acting success is guarenteed. baby.");
-                this.work("act", scan, i);
+                this.work("act", i);
             } else {
                 this.players[i].incrementRehearsalCount();
                 System.out.println("Your current rehearsal count is: " + this.players[i].getRehearsalCount() + ".");
                 System.out.println("Turn Over.");
+
             }
         }
     }
 
     public void SuccessfulAct(int i) {
         this.locationMap.get(this.players[i].getLocation()).removeShotCounter(); // remove shotcounter
-        System.out.println("'\n' These are the remaining shotcounters: " + this.locationMap.get(this.players[i].getLocation()).getShotCounters());
+        System.out.println("\n These are the remaining shotcounters: " + this.locationMap.get(this.players[i].getLocation()).getShotCounters());
         //check to see if movie is a wrap
-        if (this.locationMap.get(this.players[i].getLocation()).getShotCounters().size() == 0) {
+        if (this.locationMap.get(this.players[i].getLocation()).getShotCounters() == 0) {
             this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().setMovieIsAWrap(true);
+            System.out.println("---MOVIE IS A WRAP---");
             this.activeMovies--; 
             //if only one movie card left, start new day
-            if (this.activeMovies == 1) {
-                try {
-                    this.newDay();
-                } catch (Exception e) {
-                    System.out.println("newDay() is bugged");
-                }
-            } else {
+            if (this.activeMovies >= 1) { //pay players
                 //check if people are working on card
                 ArrayList<Integer> onCardWorkerList = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardWorkers();
                 ArrayList<Integer> offCardWorkerList = this.locationMap.get(this.players[i].getLocation()).getOffCardWorkers();
                 if (onCardWorkerList.size() > 0) {
                     //this.payPackage.onCardPayout(onCardWorkerList);
-                } else if (offCardWorkerList.size() > 0) {
-                    this.payPackage.offCardPayout(offCardWorkerList, this.locationMap, this.players);
+                    //set all onCard workers to workingFlag = false.
+                    this.payPackage.onCardPayout(onCardWorkerList, this.locationMap, this.players);
+                    if (offCardWorkerList.size() > 0) {
+                        this.payPackage.offCardPayout(offCardWorkerList, this.locationMap, this.players);
+                    }
                 }
-            }
+                resetPlayerWorkingStats(onCardWorkerList, offCardWorkerList); 
+            } else if (this.activeMovies == 1) {
+                try {
+                    this.newDay();
+                } catch (Exception e) {
+                    System.out.println("newDay() is bugged");
+                }
+            } 
+            
         } else {
             if (this.players[i].getOnCard() == true) {
                 this.players[i].addCredits(2);
@@ -255,6 +261,31 @@ public class Moderator {
             }
         }
     }
+
+    public void offCardFailedRoll(int i) {
+        if (players[i].getOnCard() == false) {
+            this.players[i].addDollars(1);
+            System.out.println("Thanks for nothing! Here's a dollar.");
+        } else {
+            System.out.println("Thanks for nothing! Should have rehearsed more.");
+        }
+    }
+
+    public void resetPlayerWorkingStats(ArrayList<Integer> onCardWorkers, ArrayList<Integer> offCardWorkers) {
+        for (int i = 0; i < onCardWorkers.size(); i++) {
+            int playerIndex = onCardWorkers.get(i);
+            this.players[playerIndex].setWorking(false);
+            this.players[playerIndex].resetRehearsalCount();
+            this.players[playerIndex].setRole("No role");
+        }
+        for (int i = 0; i < offCardWorkers.size(); i++) {
+            int playerIndex = offCardWorkers.get(i);
+            this.players[playerIndex].setWorking(false);
+            this.players[playerIndex].resetRehearsalCount();
+            this.players[playerIndex].setRole("No role");
+        }
+    }
+    
 
     public void move(String location, int i) {
         //update Location 
@@ -270,7 +301,7 @@ public class Moderator {
         Document doc = xml.getDocFromFile("board.xml");
         this.dayCount = this.dayCount + 1;
         if (this.dayCount == this.maxDays) {
-            //this.endGame
+            this.endGame();
         } else {
             //reset board put players back to trailer
             for (int i = 0; i < playerCount; i++) {
@@ -293,9 +324,24 @@ public class Moderator {
         }
     }
 
-    public void playerDecision(int playerID, String decision) {
-        //invoke Player Class
+    public void endGame() {
+        for (int i = 0; i < this.players.length; i++) {
+            int rankScore = (this.players[i].getPlayerRank()) * 5;
+            int credits = this.players[i].getCredits();
+            int dollars = this.players[i].getDollars();
 
+            int score = rankScore + credits + dollars;
+            this.finalScores[i] = score;
+            
+        }
+        int bestScore = 0;
+        for (int i = 0; i < this.players.length; i++) {
+            if (this.finalScores[i] > bestScore) {
+                bestScore = this.finalScores[i];
+                this.winner = i; 
+            }
+        } 
+        System.out.println("\n GAME-OVER \n THE WINNER IS: " + this.players[this.winner].getPlayerID() + ". With a score of: " + bestScore);
     }
 
     public void testLocations() {
