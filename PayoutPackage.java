@@ -17,16 +17,13 @@ public class PayoutPackage {
         }
         Collections.sort(randomDice); //sort in ascending order
 
-        System.out.println(" \n ############## THIS IS THE ARRAY OF SORTED RANDOM DICE ROLLS: " + randomDice);
             int numDice = randomDice.size() - 1;
             int onCardRolesLength = locationMap.get(players[onCardList.get(0)].getLocation()).getLocationsMovieCard().getOnCardRolesListCopy().size() -1;
             for (int i = onCardRolesLength; i >=0; i-- ) {
                 if (numDice == -1) {
                     break;
                 } else {
-                    System.out.println("\n ###########this is numDice count: " + numDice);
                     payoutPosition[i] = payoutPosition[i] + randomDice.get(numDice);
-                    System.out.println("\n #### Should be the total payout amount### this is payout position at index: " + i +"; " + payoutPosition[i]);
                     numDice--;
 
                 }
@@ -37,9 +34,7 @@ public class PayoutPackage {
 
             for (int i = 0; i < onCardList.size(); i++) {
                 String role = players[onCardList.get(i)].getRole();
-                System.out.println("\n ########### this is player: " + players[onCardList.get(i)].getPlayerID() + "'s role: " + role);
                 int roleIndex = locationMap.get(players[onCardList.get(i)].getLocation()).getLocationsMovieCard().getPartNameListCopy().indexOf(role);
-                System.out.println("\n ### this is the index of the role, " + role +"------- index ="+ roleIndex);
                 int payoutDollars = payoutPosition[roleIndex];
                 players[onCardList.get(i)].addDollars(payoutDollars);
             }
@@ -55,6 +50,5 @@ public class PayoutPackage {
 
             players[playerIndex].addDollars(roleRank);
         }
-        
     }
 }

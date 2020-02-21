@@ -12,13 +12,13 @@ import java.io.File;
 
 public class Moderator {
 
-    private int playerCount; //length of players[]
+    private int playerCount; 
     private int dayCount = 1;
     private int maxDays = 4;
     private boolean gameOver = false;
     private int activeMovies = 10; //comparison for new day... decrement when locations[i].movie.isAWrap == true;
     private ParseXML xml = new ParseXML();
-    private Location[] locations = new Location[11];
+    private Location[] locations = new Location[12];
     private Movie[] movies = new Movie [40];
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
@@ -28,6 +28,10 @@ public class Moderator {
     private CastingOffice castOffice = new CastingOffice();
     private int winner = -1;
     
+    public String getPlayerLocation(int i) {
+        return this.players[i].getLocation();
+    }
+
     public ArrayList<String> getOnCardRoles(int i) {
         return this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList();
     }
@@ -81,7 +85,7 @@ public class Moderator {
         Document cardDoc = xml.getDocFromFile("cards.xml");
         
         //populate array of locations
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 12; i++) {
             this.locations[i] = new Location(); 
         }
         //populate array of Movies
@@ -120,14 +124,19 @@ public class Moderator {
             }
         }
         
-        //trailer is not a set so must be handled differently
+        //trailer and office are not a sets, so must be handled differently
         this.locations[10].setLocationName("Trailer");
         ArrayList<String> trailerNeighbors = new ArrayList<String>(
             Arrays.asList("Main Street", "Saloon", "Hotel"));
         this.locations[10].setNeighbors(trailerNeighbors);
 
+        this.locations[11].setLocationName("office");
+        ArrayList<String> officeNeighbors = new ArrayList<String>(
+            Arrays.asList("Train Station", "Ranch", "Secret Hideout"));
+        this.locations[11].setNeighbors(officeNeighbors);
+
         //populate (HashMap)locationMap. Key = Location Name, Value = Location instance.
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 12; i++) {
             this.locationMap.put(this.locations[i].getLocationName(), this.locations[i]);
         }
     }
@@ -154,10 +163,29 @@ public class Moderator {
 
     public void upgradeAtOffice(String toRank, String dollarsOrCredits, int i) {
         this.castOffice.upgradeRank(toRank, dollarsOrCredits, i, players);
+        System.out.println("\nCongrats! You are now rank: " + this.players[i].getPlayerRank() + ". Your remaing dollars are: " + this.players[i].getDollars() +". Your remaing credits are: " + this.players[i].getCredits() + ".");
+    }
+
+    public boolean canPlayerUpgrade(String toRank, String dollarsOrCredits, int i) {
+        int rank = Integer.parseInt(toRank);
+        if (dollarsOrCredits.equals("dollars")) {
+            int[] dollarArr = this.castOffice.getRankPriceDollars();
+
+            if ((this.players[i].getDollars() - dollarArr[rank - 2]) >= 0) {
+                return true;
+            }
+        } else if (dollarsOrCredits.equals("credits")) {
+            int[] creditArr = this.castOffice.getRankPriceCredits();
+
+            if ((this.players[i].getCredits() - creditArr[rank - 2]) >= 0) {
+                return true;
+            }
+        }
+        return false;
     }
     
     public String displayPlayerStats(int i) {
-        String stats = "It is " + players[i].getPlayerID() + "'s turn. ||| Current Location = " + players[i].getLocation() + " ||| Current role = " + players[i].getRole() + " ||| Rehearsal chips = " + players[i].getRehearsalCount() + " ||| Rank = " + players[i].getPlayerRank() + " ||| Dollars = " + players[i].getDollars() + " ||| Credits = " + players[i].getCredits(); 
+        String stats = "\nIt is " + players[i].getPlayerID() + "'s turn. ||| Current Location = " + players[i].getLocation() + " ||| Current role = " + players[i].getRole() + " ||| Rehearsal chips = " + players[i].getRehearsalCount() + " ||| Rank = " + players[i].getPlayerRank() + " ||| Dollars = " + players[i].getDollars() + " ||| Credits = " + players[i].getCredits(); 
         return stats;
     }
 
@@ -224,12 +252,13 @@ public class Moderator {
 
     public void SuccessfulAct(int i) {
         this.locationMap.get(this.players[i].getLocation()).removeShotCounter(); // remove shotcounter
-        System.out.println("\n These are the remaining shotcounters: " + this.locationMap.get(this.players[i].getLocation()).getShotCounters());
+        System.out.println("\nThese are the remaining shotcounters: " + this.locationMap.get(this.players[i].getLocation()).getShotCounters());
         //check to see if movie is a wrap
         if (this.locationMap.get(this.players[i].getLocation()).getShotCounters() == 0) {
             this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().setMovieIsAWrap(true);
-            System.out.println("---MOVIE IS A WRAP---");
+            System.out.println("\n---THE MOVIE IS A WRAP---");
             this.activeMovies--; 
+            System.out.println("There are: " + this.activeMovies + " remaining movies.");
             //if only one movie card left, start new day
             if (this.activeMovies >= 1) { //pay players
                 //check if people are working on card
@@ -324,6 +353,7 @@ public class Moderator {
         }
     }
 
+    //calculate winner and end game.
     public void endGame() {
         for (int i = 0; i < this.players.length; i++) {
             int rankScore = (this.players[i].getPlayerRank()) * 5;
@@ -341,7 +371,8 @@ public class Moderator {
                 this.winner = i; 
             }
         } 
-        System.out.println("\n GAME-OVER \n THE WINNER IS: " + this.players[this.winner].getPlayerID() + ". With a score of: " + bestScore);
+        this.gameOver = true;
+        System.out.println("\n### GAME-OVER ### \n THE WINNER IS: " + this.players[this.winner].getPlayerID() + ". With a score of: " + bestScore);
     }
 
     public void testLocations() {
