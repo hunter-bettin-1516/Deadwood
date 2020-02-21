@@ -7,7 +7,7 @@ public class Location {
     private ArrayList<String> partNameList = new ArrayList<String>();
     private ArrayList<Integer> offCardRolesCopy = new ArrayList<Integer>(); //part levels in integers
     private ArrayList<String> partNameListCopy = new ArrayList<String>();
-    private ArrayList<String> shotCounters = new ArrayList<String>();
+    private int shotCounters = 0;
     private Movie movie;
     private ArrayList<Integer> offCardWorkers = new ArrayList<Integer>(); //stores the index of the player index that is on this locations offCard role
 
@@ -33,8 +33,8 @@ public class Location {
         this.offCardRoles = roles;
     }
 
-    public ArrayList<Integer> getOffCardRolesListCopy() {
-        return this.offCardRoles;
+    public ArrayList<Integer> getOffCardRolesCopy() {
+        return this.offCardRolesCopy;
     }
 
     public void setOffCardRolesCopy(ArrayList<Integer> roles) {
@@ -75,16 +75,22 @@ public class Location {
         }
     }
 
-    public ArrayList<String> getShotCounters() {
+    public int getShotCounters() {
         return this.shotCounters;
     }
 
     public void removeShotCounter() {
-        this.shotCounters.remove(this.shotCounters.size() - 1);
+        this.shotCounters--;
     }
 
-    public void setShotCounters(ArrayList<String> counters) {
-        this.shotCounters = counters;
+    public void setShotCounters(ArrayList<String> countersList) {
+        int maxCounter = 0;
+        for (int i = 0; i < countersList.size(); i++) {
+            if (Integer.parseInt(countersList.get(i)) > maxCounter) {
+                maxCounter = Integer.parseInt(countersList.get(i));
+            }
+        }
+        this.shotCounters = maxCounter;
     }
         
 

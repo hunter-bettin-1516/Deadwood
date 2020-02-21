@@ -18,18 +18,18 @@ public class View {
         }
         mod.initializeGame();
 
+
         while (mod.getGameOver() == false) {
             
             for (int i = 0; i < numPlayers; i++) {
                 System.out.println(mod.displayPlayerStats(i));
                 System.out.println();
                 if (mod.getIsPlayerWorking(i) == true) {
-                    
                     //currently working stuff
                     System.out.println("This is the movie: " + mod.getMovieTitle(i) + "'s budget: $" + mod.getMovieBudget(i));
                     System.out.println("Would you like to 'act' or 'rehearse'?");
                     String actOrRehearse = scan.nextLine();
-                    mod.work(actOrRehearse, scan, i);
+                    mod.work(actOrRehearse, i);
 
                 } else {
                     System.out.println("What is " + mod.getPlayerName(i) + "'s decision? ('move', 'take a role', 'upgrade')");
@@ -67,20 +67,65 @@ public class View {
                             }
                             mod.setPlayerRole(onOrOff, role, i);
                             System.out.println("Turn Over");
+                        } else if(decision.equals("upgrade")) {
+                            if (true) { /*currentlocation == casting office*/
+                                System.out.println("RANK   DOLLARS   CREDITS \n----   -------   ------- \n2   4   5 \n3   10   10 \n4   18   15 \n5   28   20 \n6   40   25");
+                                System.out.println("\nWhat rank would you like to upgrade to?");
+                                String toRank = scan.nextLine();
+                                System.out.println("\nWould you like to upgrade your rank using 'dollars' or 'credits'");
+                                String dollarsOrCredits = scan.nextLine();
+
+                                mod.upgradeAtOffice(toRank, dollarsOrCredits, i);  
+                            }
+                        } else {
+                            System.out.println("Turn Over");
+                        }
+                    } else if (decision.equals("take a role")) {
+                            System.out.println("Here is the list of main roles followed by the list of their required ranks: " + mod.getOnCardRoles(i) +", " + mod.getOnCardRanks(i) + '\n');
+                            System.out.println("Here is the list of supporting roles followed by the list of their required ranks: " + mod.getOffCardRoles(i) + ", " + mod.getOffCardRanks(i) + '\n');
+                            System.out.println("Would you like to 'take a role' or 'stay'? (Your rank must be >= the role rank.)");
+                            String onOrOff = "";
+                            String role = "";
+                            boolean validRole = false;
+                            int j = 0;
+                            while (validRole == false) {
+                                if (j == 0) {
+                                    System.out.println("Would you like to take a 'main role' or 'supporting role?' ");
+                                    onOrOff = scan.nextLine();
+                                    System.out.println("What is the name of the role that you would like to take?");   
+                                } else {
+                                    System.out.println("You do not have the required Rank to take that role.");
+                                    System.out.println("Would you like to take a 'main role' or 'supporting role?' ");
+                                    onOrOff = scan.nextLine();
+                                    System.out.println("What is the name of the role that you would like to take?");  
+                                }
+                                role = scan.nextLine();
+                                validRole = mod.verifyRole(onOrOff, role, i);
+                                j++;
+                            }
+                            mod.setPlayerRole(onOrOff, role, i);
+                            System.out.println("Turn Over");
+                        } else if (decision.equals("upgrade")) {
+                            if (true) { /*currentlocation == casting office*/
+                                System.out.println("RANK   DOLLARS   CREDITS \n----   -------   ------- \n2   4   5 \n3   10   10 \n4   18   15 \n5   28   20 \n6   40   25");
+                                System.out.println("\nWhat rank would you like to upgrade to?");
+                                String toRank = scan.nextLine();
+                                System.out.println("\nWould you like to upgrade your rank using 'dollars' or 'credits'");
+                                String dollarsOrCredits = scan.nextLine();
+
+                                mod.upgradeAtOffice(toRank, dollarsOrCredits, i);
+                            }
                         } else {
                             System.out.println("Turn Over");
                         }
                     }
+                    
                 }
             }
 
-        }
-
         //print winner
-        
         scan.close();
-        
-    }
-
-
+        }
 }
+
+

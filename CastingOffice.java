@@ -7,8 +7,17 @@ public class CastingOffice{
         Arrays.asList("Train Station", "Ranch", "Secret Hideout"));//casting office neighbors.
     
 
-    public static void upgradeRank(int playerID) {
+    public void upgradeRank(String toRank, String dollarsOrCredits,int i, Player[] players) {
         //used to calculate which rank the player wants to upgrade to then subtracts credits/dollars.
+        if (dollarsOrCredits.equals("dollars")) {
+            int newRank = Integer.parseInt(toRank);
+            players[i].addDollars(-(rankPriceDollars[newRank - 2]));
+            players[i].setPlayerRank(newRank);
+        } else if (dollarsOrCredits.equals("credits")) {
+            int newRank = Integer.parseInt(toRank);
+            players[i].addCredits(-(rankPriceCredits[newRank - 2]));
+            players[i].setPlayerRank(newRank);
+        }
     };
     
 }
