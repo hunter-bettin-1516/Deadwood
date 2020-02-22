@@ -4,13 +4,30 @@ public class View {
     public static void main(String[] args) throws Exception {
         Moderator mod = new Moderator();
         Scanner scan = new Scanner(System.in);
+        boolean loner = true;
         System.out.println("How many players?");
         int numPlayers = Integer.parseInt(scan.nextLine());
-        mod.setPlayerCount(numPlayers);
+        if (numPlayers < 2) {
+            System.out.println("\nDon't be a loner! Play Deadwood with a friend.");
+        } else {
+            loner = false;
+        }
+        
+        while (loner == true) {
+            System.out.println("\nHow many players?");
+            numPlayers = Integer.parseInt(scan.nextLine());
+            mod.setPlayerCount(numPlayers);
+
+            if (numPlayers < 2) {
+                System.out.println("\nDon't be a loner! Play Deadwood with a friend.");
+            } else {
+                loner = false;
+            }
+        }
 
         //initialize players and game board
         for (int i = 0; i < numPlayers; i++) {
-            System.out.println("What is player " + (i + 1) + "'s name?");
+            System.out.println("\nWhat is player " + (i + 1) + "'s name?");
             mod.inizializePlayers(scan.nextLine(), i);
         }
         mod.initializeGame();
