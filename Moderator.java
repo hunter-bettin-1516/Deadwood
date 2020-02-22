@@ -325,8 +325,14 @@ public class Moderator {
     }
     
     //update player[i]s Location when they choose to move
-    public void move(String location, int i) {
-        players[i].setLocation(location);
+    public boolean move(String location, int i) throws Exception {
+        if (this.locationMap.get(this.players[i].getLocation()).getNeighborList().contains(location)) {
+            this.players[i].setLocation(location);
+            return true;
+        } else {
+            System.out.println("\nSilly cheater. You can't move to a non-adjacent room. Get skipped.");
+        }
+        return false;
     }
 
     //increments day counter, puts players back to 'trailer', reshuffles movie cards and shotcounters
