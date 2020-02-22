@@ -1,13 +1,11 @@
 import java.util.*;
-import java.util.Random;
 public class PayoutPackage {
 
+    //algorithm to calculate oncard payout then add that to the players dollars/credits
     public void onCardPayout(ArrayList<Integer> onCardList, HashMap<String, Location> locationMap, Player[] players) {
-        //algorithm to calculate oncard payout then add that to the players dollars/credits
         Random rand = new Random();
         int budget = locationMap.get(players[onCardList.get(0)].getLocation()).getLocationsMovieCard().getMovieBudget();
         ArrayList<Integer> randomDice = new ArrayList<Integer>();
-
         int payoutPosition[] = new int[locationMap.get(players[onCardList.get(0)].getLocation()).getLocationsMovieCard().getOnCardRolesListCopy().size()];
 
         //populate arraylist of random rolls for a given budget
@@ -40,8 +38,8 @@ public class PayoutPackage {
             }
     }
 
+    //algorithm to calculate offcard payout then add that to the players dollars/credits
     public void offCardPayout(ArrayList<Integer> offCardList, HashMap<String, Location> locationMap, Player[] players) {
-        //algorithm to calculate offcard payout then add that to the players dollars/credits
         for (int i = 0; i < offCardList.size(); i++) {
             int playerIndex = offCardList.get(i);
             String role = players[playerIndex].getRole();

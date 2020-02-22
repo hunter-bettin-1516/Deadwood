@@ -1,5 +1,3 @@
-/* View class to be implemented for Model View Controller implementation. For Assgn 2 it will just parse from the command line*/
-import java.util.Scanner;
 import java.util.*;
 
 public class View {
@@ -17,7 +15,6 @@ public class View {
         }
         mod.initializeGame();
 
-
         while (mod.getGameOver() == false) {
             
             for (int i = 0; i < numPlayers; i++) {
@@ -30,7 +27,11 @@ public class View {
                     String actOrRehearse = scan.nextLine();
                     mod.work(actOrRehearse, i);
                 } else {
-                    System.out.println("What is " + mod.getPlayerName(i) + "'s decision? ('move', 'take a role', 'upgrade')");
+                    if (mod.getPlayerLocation(i).equals("office")) {
+                        System.out.println("What is " + mod.getPlayerName(i) + "'s decision? ('move' or 'upgrade')");
+                    } else {
+                        System.out.println("What is " + mod.getPlayerName(i) + "'s decision? ('move', 'take a role', 'upgrade')");
+                    }
                     //repeat take a role code here
                     String decision = scan.nextLine();
                     if (decision.equals("move") || decision.equals("Move")) {
