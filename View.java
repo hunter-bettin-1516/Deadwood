@@ -59,7 +59,6 @@ public class View {
                                 continue;
                             }
                         } catch (Exception e) {
-                            System.out.println("Thanks for nothing! Should have rehearsed more.");
                             continue;
                         }
                             
