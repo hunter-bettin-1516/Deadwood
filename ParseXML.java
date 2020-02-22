@@ -1,7 +1,3 @@
-// Example Code for parsing XML file
-// Dr. Moushumi Sharmin
-// CSCI 345
-
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,7 +12,6 @@ import java.util.*;
 
 public class ParseXML{
 
-   
         // building a document from the XML file
         // returns a Document object after loading the book.xml file.
         public Document getDocFromFile(String filename)
