@@ -54,7 +54,14 @@ public class View {
                     if (decision.equals("move") || decision.equals("Move")) {
                         System.out.println('\n' + "You can move to these locations: " + mod.getPlayersNeighbors(i) + ". Where would you like to go?");
                         String newLocation = scan.nextLine();
-                        mod.move(newLocation, i); //update player location
+                        try {
+                            if (mod.move(newLocation, i) == false) { //update player location
+                                continue;
+                            }
+                        } catch (Exception e) {
+                            continue;
+                        }
+                            
                         if (mod.getPlayerLocation(i).equals("office")) {
                             System.out.println("\nYou have moved to the Casting Office");
                             System.out.println("\nWould you like to 'upgrade or 'stay on location: office?");
