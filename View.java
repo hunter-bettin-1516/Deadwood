@@ -1,7 +1,16 @@
 import java.util.*;
-
+import javax.swing.JFrame;
+import javax.swing.*;
+import javax.swing.event.*;
+  
 public class View {
     public static void main(String[] args) throws Exception {
+        BoardLayersListener board = new BoardLayersListener();
+        board.setVisible(true);
+    
+        // Take input from the user about number of players
+        JOptionPane.showInputDialog(board, "How many players?"); 
+        
         Moderator mod = new Moderator();
         Scanner scan = new Scanner(System.in);
         boolean loner = true;
