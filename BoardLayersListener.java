@@ -9,10 +9,8 @@
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.ImageIcon;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
-import javax.swing.JOptionPane;
 
 public class BoardLayersListener extends JFrame {
 
@@ -23,6 +21,7 @@ public class BoardLayersListener extends JFrame {
   JLabel playerlabel;
   JLabel mLabel;
   
+  ImageIcon icon; //THE BOARD
   //JButtons
   JButton bAct;
   JButton bRehearse;
@@ -45,7 +44,7 @@ public class BoardLayersListener extends JFrame {
     
        // Create the deadwood board
        boardlabel = new JLabel();
-       ImageIcon icon =  new ImageIcon("board.jpg");
+       icon =  new ImageIcon("board.jpg");
        boardlabel.setIcon(icon); 
        boardlabel.setBounds(0,0,icon.getIconWidth(),icon.getIconHeight());
       
@@ -103,7 +102,50 @@ public class BoardLayersListener extends JFrame {
        bPane.add(bAct, Integer.valueOf(2));
        bPane.add(bRehearse, Integer.valueOf(2));
        bPane.add(bMove, Integer.valueOf(2));
+  
+       
+  
+   }
+
+   public void userStats(Moderator mod, int i) {
+      JLabel diceLabel = new JLabel("Your dice:");
+      diceLabel.setBounds(icon.getIconWidth()+10,260,100,20);
+      
+      String diceFile = mod.getPlayerArray()[i].getDiceFile();
+      ImageIcon playerIcon =  new ImageIcon(diceFile);
+      JLabel dicePNGLabel = new JLabel(playerIcon);
+      dicePNGLabel.setBounds(icon.getIconWidth()+60,215,100,100);
+      
+
+      JLabel location = new JLabel("Your location:    " + mod.getPlayerLocation(i));
+      location.setBounds(icon.getIconWidth()+10,290,500,20);
+
+      JLabel role = new JLabel("Your role:    " + mod.getPlayerArray()[i].getRole());
+      role.setBounds(icon.getIconWidth()+10,320,500,20);
+
+      JLabel rehearsalChips = new JLabel("Rehearsal chips:    " + mod.getPlayerArray()[i].getRehearsalCount());
+      rehearsalChips.setBounds(icon.getIconWidth()+10,350,500,20);
+
+      JLabel rank = new JLabel("Your rank:    " + mod.getPlayerArray()[i].getPlayerRank());
+      rank.setBounds(icon.getIconWidth()+10,380,500,20);
+
+      JLabel dollars = new JLabel("Your dollars:    " + mod.getPlayerArray()[i].getDollars());
+      dollars.setBounds(icon.getIconWidth()+10,410,500,20);
+
+      JLabel credits = new JLabel("Your credits:    " + mod.getPlayerArray()[i].getCredits());
+      credits.setBounds(icon.getIconWidth()+10,440,500,20);
+
+      bPane.add(diceLabel, Integer.valueOf(2));
+      bPane.add(dicePNGLabel, Integer.valueOf(2));
+      bPane.add(location, Integer.valueOf(2));
+      bPane.add(role, Integer.valueOf(2));
+      bPane.add(rehearsalChips, Integer.valueOf(2));
+      bPane.add(rank, Integer.valueOf(2));
+      bPane.add(dollars, Integer.valueOf(2));
+      bPane.add(credits, Integer.valueOf(2));
   }
+
+  
   
   // This class implements Mouse Events
   
