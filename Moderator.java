@@ -29,6 +29,11 @@ public class Moderator {
     private int winner = -1;
     
     //getters and playerCount setter so class View can access/print certain data
+
+    public Player[] getPlayerArray() {
+        return this.players;
+    }
+
     public String getPlayerLocation(int i) {
         return this.players[i].getLocation();
     }
@@ -143,11 +148,13 @@ public class Moderator {
     }
 
     //init player instances
-    public void inizializePlayers(String ID, int i) {
+    public void inizializePlayers(String ID, int i, String diceColor) {
         
         this.players[i] = new Player();
         
         this.players[i].setPlayerID(ID);
+
+        this.players[i].setDiceColor(diceColor);
 
         if (this.playerCount < 4) {
             this.maxDays = 3; 
@@ -359,6 +366,7 @@ public class Moderator {
                         findNewCard = false;
                     }
                 }
+                this.activeMovies = 10;
                 this.locations[i].getLocationsMovieCard().setMovieIsAWrap(false);
             }
         }
