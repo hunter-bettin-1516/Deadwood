@@ -137,6 +137,112 @@ public class ParseXML{
             }
             return takesArr;
          }
+         //return x coordinates for shotcounters for each location
+         public ArrayList<Integer> getShotCounterXCoordinateArrayList(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<Integer> XCoords = new ArrayList<Integer>();  
+            NodeList sets = root.getElementsByTagName("set");
+            //reads data from the nodes
+            Node set = sets.item(i);
+            //reads data         
+            NodeList children = set.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node sub = children.item(j);
+               if("takes".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z=0; z< grandchildren.getLength(); z++) {
+                     Node take = grandchildren.item(z);
+                     if("take".equals(take.getNodeName())) {
+                        NodeList greatgrandchildren = take.getChildNodes();
+                        for (int y=0; y<greatgrandchildren.getLength(); y++) {
+                           Node area = greatgrandchildren.item(y);
+                           if ("area".equals(area.getNodeName())) {
+                              XCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("x").getNodeValue())); //populate shotcounter arrayList  
+                           }
+                        }  
+                                              
+                     }
+                  }   
+               }
+            }
+            return XCoords;
+         }
+
+         //return the y coordinate for each shotcounter
+         public int getShotCounterYCoordinate(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag  
+            NodeList sets = root.getElementsByTagName("set");
+            //reads data from the nodes
+            int YCoord = 0;
+            Node set = sets.item(i);
+            //reads data         
+            NodeList children = set.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node sub = children.item(j);
+               if("takes".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z=0; z< grandchildren.getLength(); z++) {
+                     Node take = grandchildren.item(z);
+                     if("take".equals(take.getNodeName())) {
+                        NodeList greatgrandchildren = take.getChildNodes();
+                        for (int y=0; y<greatgrandchildren.getLength(); y++) {
+                           Node area = greatgrandchildren.item(y);
+                           if ("area".equals(area.getNodeName())) {
+                              YCoord = (Integer.parseInt(area.getAttributes().getNamedItem("y").getNodeValue())); //populate shotcounter arrayList  
+                           }
+                        }  
+                                              
+                     }
+                  }   
+               }
+            }
+            return YCoord;
+         }
+
+         // return X coordinates for offcard roles
+         public ArrayList<Integer> getOffCardRoleXCoordinates(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<Integer> XCoords = new ArrayList<Integer>();
+            NodeList cards = root.getElementsByTagName("set"); 
+            Node card = cards.item(i);         
+            NodeList children = card.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node sub = children.item(j);
+               if("part".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z = 0; z < grandchildren.getLength(); z++) {
+                     Node area = grandchildren.item(z);
+                     if ("area".equals(area.getNodeName())) {
+                        XCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("x").getNodeValue()));
+                     }
+                  }                   
+               }
+            }
+            return XCoords;
+         }
+
+         // return Y coordinates for offcard roles
+         public ArrayList<Integer> getOffCardRoleYCoordinates(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<Integer> YCoords = new ArrayList<Integer>();
+            NodeList cards = root.getElementsByTagName("set"); 
+            Node card = cards.item(i);         
+            NodeList children = card.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node sub = children.item(j);
+               if("part".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z = 0; z < grandchildren.getLength(); z++) {
+                     Node area = grandchildren.item(z);
+                     if ("area".equals(area.getNodeName())) {
+                        YCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("y").getNodeValue()));
+                     }
+                  }                   
+               }
+            }
+            return YCoords;
+         }
+
 
          //return offcardroles array list
          public ArrayList<Integer> getOffCardRolesArrayList(Document d, int i) {
@@ -180,4 +286,48 @@ public class ParseXML{
             }
             return partsArr;
          }
+
+         //return MovieCard coordinate
+         public ArrayList<Integer> getMovieCardCoordinatesArrayList(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<Integer> cardlocationArr = new ArrayList<Integer>();  
+            NodeList sets = root.getElementsByTagName("set");
+            //reads data from the nodes
+            Node set = sets.item(i);
+            //reads data         
+            NodeList children = set.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node area = children.item(j);
+               if("area".equals(area.getNodeName())){
+                  cardlocationArr.add(Integer.parseInt(area.getAttributes().getNamedItem("x").getNodeValue()));  //populate x-coordinate for Movie card arrayList   
+                  cardlocationArr.add(Integer.parseInt(area.getAttributes().getNamedItem("y").getNodeValue()));  //populate y-coordinate for Movie card arrayList
+               }
+            }
+            return cardlocationArr;
+         }
+
+         //return onCard role x coordinate
+         public ArrayList<Integer> getonCardXCoordinateArrayList(Document d, int i) {
+            Element root = d.getDocumentElement(); // <board> tag
+            ArrayList<Integer> areaArr = new ArrayList<Integer>();
+            NodeList cards = root.getElementsByTagName("card"); 
+            Node card = cards.item(i);         
+            NodeList children = card.getChildNodes();
+            for (int j=0; j< children.getLength(); j++){
+               Node sub = children.item(j);
+               if("area".equals(sub.getNodeName())){
+                areaArr.add(Integer.parseInt((sub.getAttributes().getNamedItem("x").getNodeValue()))); //populate on card x coordinate arrayList                          
+               }
+            }
+            return areaArr;
+         }
+
+         //return movie card image
+         public String getCardImage(Document d, int i) {
+            Element root = d.getDocumentElement(); //<cards tag>
+            NodeList cards = root.getElementsByTagName("card"); 
+            Node card = cards.item(i);
+            return card.getAttributes().getNamedItem("img").getNodeValue();  
+         }
+
 }//class

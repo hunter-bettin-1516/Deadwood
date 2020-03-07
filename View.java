@@ -7,10 +7,12 @@ public class View {
     public static void main(String[] args) throws Exception {
         BoardLayersListener board = new BoardLayersListener();
         board.setVisible(true);
+        
     
         // Take input from the user about number of players
         
         Moderator mod = new Moderator();
+        mod.setGUI(board);
         Scanner scan = new Scanner(System.in);
         boolean loner = true;
         String numPlayersStr = JOptionPane.showInputDialog(board, "How many players?");
@@ -60,10 +62,16 @@ public class View {
         }
         mod.initializeGame();
 
+        int count = 0;
         while (mod.getGameOver() == false) {
             
             for (int i = 0; i < numPlayers; i++) {
-                board.userStats(mod, i);
+                count+= 1;
+                if (count == 1){
+                    board.userStats(mod, i, false);
+                } else {
+                    board.userStats(mod, i, true);
+                }
                 System.out.println(mod.displayPlayerStats(i));
                 System.out.println();
                 if (mod.getIsPlayerWorking(i) == true) {
