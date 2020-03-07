@@ -27,8 +27,17 @@ public class Moderator {
     private PayoutPackage payPackage = new PayoutPackage();
     private CastingOffice castOffice = new CastingOffice();
     private int winner = -1;
+    private BoardLayersListener GUI;
     
     //getters and playerCount setter so class View can access/print certain data
+
+    public void setGUI(BoardLayersListener gui) {
+        this.GUI = gui;
+    }
+
+    public BoardLayersListener getGUI() {
+        return this.GUI;
+    }
 
     public Player[] getPlayerArray() {
         return this.players;
@@ -106,6 +115,9 @@ public class Moderator {
             this.movies[i].setMovieBudget(xml.getBudget(cardDoc, i)); //set movie budget
             this.movies[i].setPartNameList(xml.getPartNamesArrayList(cardDoc, i)); //set oncard role name
             this.movies[i].setPartNameListCopy(xml.getPartNamesArrayList(cardDoc, i));
+
+            this.movies[i].setCardFile(xml.getCardImage(cardDoc, i));
+            this.movies[i].setOnCardXCoordinates(xml.getonCardXCoordinateArrayList(cardDoc, i));
         }
 
         //set location name, neighbors, shot counters, and offcard roles for each instance
@@ -117,6 +129,12 @@ public class Moderator {
             this.locations[i].setOffCardRolesCopy(xml.getOffCardRolesArrayList(doc, i));
             this.locations[i].setPartNameList(xml.getOffCardPartsArrayList(doc, i));
             this.locations[i].setPartNameListCopy(xml.getOffCardPartsArrayList(doc, i));
+            //set coordinates
+            this.locations[i].setShotCounterXCoords(xml.getShotCounterXCoordinateArrayList(doc, i));
+            this.locations[i].setShotCounterYCoord(xml.getShotCounterYCoordinate(doc, i));
+            this.locations[i].setOffCardRolesXCoordinates(xml.getOffCardRoleXCoordinates(doc, i));
+            this.locations[i].setOffCardRolesYCoordinates(xml.getOffCardRoleYCoordinates(doc, i));
+            this.locations[i].setMovieCardCoordinates(xml.getMovieCardCoordinatesArrayList(doc, i));
             
             //populate a random movie to each location
             boolean findNewCard = true;
@@ -129,6 +147,9 @@ public class Moderator {
                 }
             }
         }
+        //call set movie card function in BoardLayersListener pass in whole locations array
+        GUI.placeMovieCards(this.locations);
+        GUI.placeShotCounterLabels(this.locations);
         
         //trailer and office are not a sets, so must be handled differently
         this.locations[10].setLocationName("Trailer");
