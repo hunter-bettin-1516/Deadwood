@@ -7,15 +7,16 @@ public class View {
     public static void main(String[] args) throws Exception {
         BoardLayersListener board = new BoardLayersListener();
         board.setVisible(true);
+        
     
         // Take input from the user about number of players
-        JOptionPane.showInputDialog(board, "How many players?"); 
         
         Moderator mod = new Moderator();
+        mod.setGUI(board);
         Scanner scan = new Scanner(System.in);
         boolean loner = true;
-        System.out.println("How many players?");
-        int numPlayers = Integer.parseInt(scan.nextLine());
+        String numPlayersStr = JOptionPane.showInputDialog(board, "How many players?");
+        int numPlayers = Integer.parseInt(numPlayersStr);
         if (numPlayers < 2) {
             System.out.println("\nDon't be a loner! Play Deadwood with a friend.");
         } else {
@@ -23,8 +24,8 @@ public class View {
         }
         
         while (loner == true) {
-            System.out.println("\nHow many players?");
-            numPlayers = Integer.parseInt(scan.nextLine());
+            numPlayersStr = JOptionPane.showInputDialog(board, "How many players?");
+            numPlayers = Integer.parseInt(numPlayersStr);
             mod.setPlayerCount(numPlayers);
 
             if (numPlayers < 2) {
@@ -35,15 +36,42 @@ public class View {
         }
 
         //initialize players and game board
+        
         for (int i = 0; i < numPlayers; i++) {
-            System.out.println("\nWhat is player " + (i + 1) + "'s name?");
-            mod.inizializePlayers(scan.nextLine(), i);
+            String diceColor = "";
+            String playerName = JOptionPane.showInputDialog(board, "What is player " + (i + 1) + "'s name?");
+            if (i == 0) {
+                diceColor = "blue";
+            } else if (i == 1) {
+                diceColor = "cyan";
+            } else if (i == 2) {
+                diceColor = "green";
+            } else if (i == 3) {
+                diceColor = "orange";
+            } else if (i == 4) {
+                diceColor = "pink";
+            } else if (i == 5) {
+                diceColor = "violet";
+            } else if (i == 6) {
+                diceColor = "white";
+            } else if (i == 7) {
+                diceColor = "yellow";
+            }
+            
+            mod.inizializePlayers(playerName, i, diceColor);
         }
         mod.initializeGame();
 
+        int count = 0;
         while (mod.getGameOver() == false) {
             
             for (int i = 0; i < numPlayers; i++) {
+                count+= 1;
+                if (count == 1){
+                    board.userStats(mod, i, false);
+                } else {
+                    board.userStats(mod, i, true);
+                }
                 System.out.println(mod.displayPlayerStats(i));
                 System.out.println();
                 if (mod.getIsPlayerWorking(i) == true) {

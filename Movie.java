@@ -10,7 +10,34 @@ public class Movie {
     private boolean usedMovie = false; //flag for duplicate movies when shuffling random movie cards to each location
     private ArrayList<Integer> onCardWorkers = new ArrayList<Integer>(); //stores the index of the player index that is on this locations OnCard role
 
+    private String cardFile = "";
+
+    private ArrayList<Integer> onCardXCoordinatesList = new ArrayList<Integer>();
+
+    private int onCardYCoord = 47;
+
     //getters and setters for these attributes
+    
+    public void setCardFile(String img) {
+        this.cardFile = "cards/" + img;
+    }
+
+    public String getCardFile() {
+        return this.cardFile;
+    } 
+
+    public void setOnCardXCoordinates(ArrayList<Integer> coords) {
+        this.onCardXCoordinatesList = coords;
+    }
+
+    public ArrayList<Integer> getOnCardXCoordinates() {
+        return this.onCardXCoordinatesList;
+    }
+
+    public int getOnCardYCoord() {
+        return this.onCardYCoord;
+    }
+   
     public void setMovieBudget(int budget) {
         this.movieBudget = budget;
     }

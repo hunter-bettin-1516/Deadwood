@@ -1,5 +1,7 @@
 import java.util.*;
 
+import javax.swing.JLabel;
+
 public class Location {
     private String locationName;
     private ArrayList<String> neighbors = new ArrayList<String>();
@@ -11,7 +13,65 @@ public class Location {
     private Movie movie;
     private ArrayList<Integer> offCardWorkers = new ArrayList<Integer>(); //stores the index of the player index that is on this locations offCard role
 
+    private ArrayList<Integer> movieCardCoordinates = new ArrayList<Integer>(); //syd got it
+    
+    private ArrayList<Integer> shotCounterXCoordinates = new ArrayList<Integer>(); //done
+
+    private int shotCounterYCoordinate = 0; //done
+
+    private ArrayList<Integer> offCardRolesXCoordinates = new ArrayList<Integer>();
+
+    private ArrayList<Integer> offCardRolesYCoordinates = new ArrayList<Integer>();
+
+    private ArrayList<JLabel> shotCounterLabels = new ArrayList<JLabel>();
+
+
+
     //getters and setters for attributes
+
+    public void addShotCounterLabel(JLabel label) {
+        this.shotCounterLabels.add(label);
+    }
+
+    public void setMovieCardCoordinates(ArrayList<Integer> coords) {
+        this.movieCardCoordinates = coords;
+    }
+
+    public ArrayList<Integer> getMovieCardCoordinates() {
+        return this.movieCardCoordinates;
+    }
+
+    public void setShotCounterXCoords(ArrayList<Integer> coords) {
+        this.shotCounterXCoordinates = coords;
+    }
+
+    public ArrayList<Integer> getShotCounterXCoords() {
+        return this.shotCounterXCoordinates;
+    }
+
+    public void setShotCounterYCoord(int coords) {
+        this.shotCounterYCoordinate = coords;
+    }
+
+    public int getShotCounterYCoord() {
+        return this.shotCounterYCoordinate;
+    }
+
+    public void setOffCardRolesXCoordinates(ArrayList<Integer> coords) {
+        this.offCardRolesXCoordinates = coords;
+    }
+
+    public ArrayList<Integer> getOffCardRolesXCoordinates() {
+        return this.offCardRolesXCoordinates;
+    }
+
+    public void setOffCardRolesYCoordinates(ArrayList<Integer> coords) {
+        this.offCardRolesYCoordinates = coords;
+    }
+
+    public ArrayList<Integer> getOffCardRolesYCoordinates() {
+        return this.offCardRolesYCoordinates;
+    }
 
     public void setLocationName(String name) {
         this.locationName = name;

@@ -10,6 +10,20 @@ public class Player {
     private String currentRole = "No role";
     private boolean onCard = false;
     private boolean working = false;
+    private char diceColor;
+
+    public void setDiceColor(String str) {
+        this.diceColor = str.charAt(0);
+    }
+
+    public char getDiceColor() {
+        return this.diceColor;
+    }
+
+    public String getDiceFile() {
+        return ("dice/"+this.diceColor + this.playerRank + ".png");
+    
+    }
 
     public void setPlayerID(String ID) {
         //set playerID;
