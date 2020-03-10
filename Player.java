@@ -1,4 +1,5 @@
 import java.util.*;
+import javax.swing.JLabel;
 
 public class Player {
     private int credits;
@@ -11,6 +12,25 @@ public class Player {
     private boolean onCard = false;
     private boolean working = false;
     private char diceColor;
+    private int[] coordinates = new int[2];
+    private JLabel playerDice;
+
+    
+    public void setPlayerDice(JLabel playerDice) {
+        this.playerDice = playerDice;
+    }
+
+    public JLabel getPlayerDice() {
+        return this.playerDice;
+    }
+
+    public void setCoordinates(int[] coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public int[] getCoordinates() {
+        return coordinates;
+    }
 
     public void setDiceColor(String str) {
         this.diceColor = str.charAt(0);

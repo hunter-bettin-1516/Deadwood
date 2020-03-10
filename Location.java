@@ -1,6 +1,9 @@
 import java.util.*;
 
-import javax.swing.JLabel;
+import javax.swing.*;
+import javax.imageio.ImageIO;
+import java.awt.event.*;
+import java.awt.*;
 
 public class Location {
     private String locationName;
@@ -25,9 +28,18 @@ public class Location {
 
     private ArrayList<JLabel> shotCounterLabels = new ArrayList<JLabel>();
 
+    private ImageIcon cardBackImg = new ImageIcon("cards/CardBack-small.jpg");
+
+    private JLabel cardBack = new JLabel(cardBackImg);
+
 
 
     //getters and setters for attributes
+
+    
+    public JLabel getCardBackLabel() {
+        return this.cardBack;
+    }
 
     public void addShotCounterLabel(JLabel label) {
         this.shotCounterLabels.add(label);
