@@ -15,6 +15,8 @@ import java.awt.event.*;
 public class BoardLayersListener extends JFrame {
 
   static final long serialVersionUID = 10l;
+  private Moderator mod;
+
   // JLabels
   JLabel boardlabel;
   JLabel cardlabel;
@@ -23,9 +25,14 @@ public class BoardLayersListener extends JFrame {
   
   ImageIcon icon; //THE BOARD
   //JButtons
+  JButton bMove;
+  JButton bTakeARole;
+  JButton bUpgrade;
   JButton bAct;
   JButton bRehearse;
-  JButton bMove;
+  JButton bMainRole;
+  JButton bSupportRole;
+  
   
   // JLayered Pane
   JLayeredPane bPane;
@@ -37,9 +44,10 @@ public class BoardLayersListener extends JFrame {
   JLabel credits;
   JLabel dollars;
   JLabel rank;
+  //for stats panel
   JLabel diceLabel;
   JLabel dicePNGLabel;
-  //dice png
+  //dice png - stats panel
   ImageIcon playerIcon;
 
   ImageIcon[] movieCards = new ImageIcon[10];
@@ -49,9 +57,19 @@ public class BoardLayersListener extends JFrame {
   ImageIcon shotCounterImg = new ImageIcon("shot.png");
 
   JLabel[] shotCounterLabels = new JLabel[22];
-  
-  // Constructor
-  
+
+  //the dice labels that interact with the board
+  ImageIcon[] playerDiceImg;
+
+  JLabel[] playerDiceLabel;
+
+  JLabel[] cardBackLabel = new JLabel[10];
+
+  public void setMod(Moderator m) {
+     this.mod = m;
+  }
+
+    // Constructor
   public BoardLayersListener() {
       
        // Set the title of the JFrame
@@ -103,28 +121,86 @@ public class BoardLayersListener extends JFrame {
        bPane.add(mLabel, Integer.valueOf(2));
 
        // Create Action buttons
+       bMove = new JButton("MOVE");
+       bMove.setBackground(Color.white);
+       bMove.setBounds(icon.getIconWidth()+10,30,100, 20);
+       bMove.addMouseListener(new boardMouseListener());
+
+       bTakeARole = new JButton("TAKE A ROLE");
+       bTakeARole.setBackground(Color.white);
+       bTakeARole.setBounds(icon.getIconWidth()+10,60,150, 20);
+       bTakeARole.addMouseListener(new boardMouseListener());
+       
+       bUpgrade = new JButton("UPGRADE");
+       bUpgrade.setBackground(Color.white);
+       bUpgrade.setBounds(icon.getIconWidth()+10,90,110, 20);
+       bUpgrade.addMouseListener(new boardMouseListener());
+
        bAct = new JButton("ACT");
        bAct.setBackground(Color.white);
-       bAct.setBounds(icon.getIconWidth()+10, 30,100, 20);
+       bAct.setBounds(icon.getIconWidth()+10, 120,100, 20);
        bAct.addMouseListener(new boardMouseListener());
        
        bRehearse = new JButton("REHEARSE");
        bRehearse.setBackground(Color.white);
-       bRehearse.setBounds(icon.getIconWidth()+10,60,110, 20);
+       bRehearse.setBounds(icon.getIconWidth()+10,150,110, 20);
        bRehearse.addMouseListener(new boardMouseListener());
-       
-       bMove = new JButton("MOVE");
-       bMove.setBackground(Color.white);
-       bMove.setBounds(icon.getIconWidth()+10,90,100, 20);
-       bMove.addMouseListener(new boardMouseListener());
 
+       bSupportRole = new JButton("SUPPORTING ROLE");
+       bSupportRole.setBackground(Color.white);
+       bSupportRole.setBounds(icon.getIconWidth()+10,180,170, 20);
+       bSupportRole.addMouseListener(new boardMouseListener());
+
+       bMainRole = new JButton("MAIN ROLE");
+       bMainRole.setBackground(Color.white);
+       bMainRole.setBounds(icon.getIconWidth()+10,210,110, 20);
+       bMainRole.addMouseListener(new boardMouseListener());
+       
+       
        // Place the action buttons in the top layer
+       bPane.add(bMove, Integer.valueOf(2));
+       bPane.add(bTakeARole, Integer.valueOf(2));
+       bPane.add(bUpgrade, Integer.valueOf(2));
        bPane.add(bAct, Integer.valueOf(2));
        bPane.add(bRehearse, Integer.valueOf(2));
-       bPane.add(bMove, Integer.valueOf(2));
-  
+       bPane.add(bMainRole, Integer.valueOf(2));
+       bPane.add(bSupportRole, Integer.valueOf(2));
        
-  
+       
+
+   }
+
+   public void initializePlayerDice(Player[] players, int numPlayers) {
+      
+      this.playerDiceImg =  new ImageIcon[numPlayers];
+      this.playerDiceLabel = new JLabel[numPlayers];
+
+      for (int i = 0; i < numPlayers; i++) {
+         String diceFile = players[i].getDiceFile();
+         this.playerDiceImg[i] = new ImageIcon(diceFile);
+         this.playerDiceLabel[i] = new JLabel(this.playerDiceImg[i]);
+
+         players[i].setPlayerDice(this.playerDiceLabel[i]);
+      }
+   }
+   public void setPlayersToTrailer(Player[] players, int numPlayers) {
+      int x = 961;
+      int y = 248;
+      for (int i = 0; i < numPlayers; i++) {
+         if (i >= 5) {
+            players[i].getPlayerDice().setBounds(x, y, 100, 100);
+            this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(2));
+            x += 40;
+         } else {
+            players[i].getPlayerDice().setBounds(x, y, 100, 100);
+            this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(2));
+            x += 40;
+            if (i == 4) {
+               x = 961;
+               y = 293;
+            }
+         }
+      }
    }
 
    public void userStats(Moderator mod, int i, boolean remove) {
@@ -180,12 +256,16 @@ public class BoardLayersListener extends JFrame {
   public void placeMovieCards(Location[] locArr) {
       for (int i = 0; i < 10; i ++) {
          this.movieCards[i] = new ImageIcon(locArr[i].getLocationsMovieCard().getCardFile());
+         
+         this.cardBackLabel[i] = locArr[i].getCardBackLabel();
 
          this.movieCardsLabel[i] = new JLabel(this.movieCards[i]);
 
          this.movieCardsLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
 
+         this.cardBackLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
          bPane.add(this.movieCardsLabel[i], Integer.valueOf(2));
+         bPane.add(this.cardBackLabel[i], Integer.valueOf(3));
       } 
   }
 
@@ -216,6 +296,11 @@ public class BoardLayersListener extends JFrame {
    }
   }
 
+  public void movePlayerDice(Player[] players, int i) {
+     this.bPane.remove(this.playerDiceLabel[i]);
+
+  }
+
 
 
   
@@ -236,6 +321,10 @@ public class BoardLayersListener extends JFrame {
          }
          else if (e.getSource()== bMove){
             System.out.println("Move is Selected\n");
+            mod.setInput("move");
+
+            
+            
          }         
       }
       public void mousePressed(MouseEvent e) {
