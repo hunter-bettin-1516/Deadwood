@@ -23,13 +23,40 @@ public class Moderator {
     private HashMap<String, Location> locationMap = new HashMap<String, Location>();
     private Random random = new Random();
     private Player[] players = new Player[8];
+    private int numPlayers = 0;
     private int[] finalScores = new int[8];
     private PayoutPackage payPackage = new PayoutPackage();
     private CastingOffice castOffice = new CastingOffice();
     private int winner = -1;
     private BoardLayersListener GUI;
-    
+    private String playerInput = "";
+    private int currentPlayerIndex;
+
     //getters and playerCount setter so class View can access/print certain data
+   
+    public int getCurrentPlayerIndex() {
+        return this.currentPlayerIndex;
+    }
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        this.currentPlayerIndex = currentPlayerIndex;
+    }
+
+    public String getInput() {
+        return this.playerInput;
+    }
+
+    public void setInput(String input) {
+        this.playerInput = input;
+    }
+
+    public void setNumPlayers(int numPlayers) {
+        this.numPlayers = numPlayers;
+    }
+
+    public int getNumPlayers() {
+        return this.numPlayers;
+    }
 
     public void setGUI(BoardLayersListener gui) {
         this.GUI = gui;
@@ -166,10 +193,13 @@ public class Moderator {
         for (int i = 0; i < 12; i++) {
             this.locationMap.put(this.locations[i].getLocationName(), this.locations[i]);
         }
+
+        GUI.initializePlayerDice(this.players, this.numPlayers);
+        GUI.setPlayersToTrailer(this.players, this.numPlayers);
     }
 
     //init player instances
-    public void inizializePlayers(String ID, int i, String diceColor) {
+    public void initializePlayers(String ID, int i, String diceColor) {
         
         this.players[i] = new Player();
         
@@ -354,6 +384,7 @@ public class Moderator {
     
     //update player[i]s Location when they choose to move
     public boolean move(String location, int i) throws Exception {
+        System.out.print(this.players[i].getLocation() + " ######## this is the players location should be trailer");
         if (this.locationMap.get(this.players[i].getLocation()).getNeighborList().contains(location)) {
             this.players[i].setLocation(location);
             return true;
