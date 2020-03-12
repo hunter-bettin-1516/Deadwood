@@ -16,7 +16,7 @@ public class Location {
     private Movie movie;
     private ArrayList<Integer> offCardWorkers = new ArrayList<Integer>(); //stores the index of the player index that is on this locations offCard role
 
-    private ArrayList<Integer> movieCardCoordinates = new ArrayList<Integer>(); //syd got it
+    private ArrayList<Integer> movieCardCoordinates = new ArrayList<Integer>(); //0:x coord, 1:y coord
     
     private ArrayList<Integer> shotCounterXCoordinates = new ArrayList<Integer>(); //done
 
@@ -32,11 +32,24 @@ public class Location {
 
     private JLabel cardBack = new JLabel(cardBackImg);
 
+    private boolean hasBeenVisited = false;
+
 
 
     //getters and setters for attributes
 
-    
+    /**
+     * @param hasBeenVisited the hasBeenVisited to set
+     */
+    public void setHasBeenVisited(boolean b) {
+        this.hasBeenVisited = b;
+    }
+
+    public boolean getHasBeenVisited() {
+        return this.hasBeenVisited;
+    }
+
+
     public JLabel getCardBackLabel() {
         return this.cardBack;
     }

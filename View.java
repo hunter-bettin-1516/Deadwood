@@ -80,25 +80,29 @@ public class View {
                 
                 boolean turnOver = false;
                 while (turnOver == false) {
-                    //System.out.println("STILL IN LOOP");
-                    //System.out.println("this is input: " + mod.getInput());
-                    if (mod.getInput().equals("move")) {
-                        
+                    String input = mod.getInput();
+                    System.out.print(""); // input will not ever change without this print ???
+                    if (input.equals("move")) {
+                       
                         boolean validNeighbor = false;
                         while (validNeighbor == false) {
-                            String whereTo = JOptionPane.showInputDialog(board, "Where would you like to move?");
-                            //if (mod.getPlayersNeighbors(i).contains(whereTo) == true) {
-                            mod.move(whereTo, i);
-                            validNeighbor = true;
-                            //}
+                            String whereTo = JOptionPane.showInputDialog(board, "Where would you like to move?", mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
+                            if (mod.move(whereTo, i) == true) {
+                                validNeighbor = true;
+                            } else {
+                                JOptionPane.showMessageDialog(board, "You can't move to a non-adjacent room.", mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
-                        String takeOrStay = JOptionPane.showInputDialog(board, "Would you like to 'take a role' or 'stay' on location: " + mod.getPlayerArray()[i].getLocation());
+                        String takeOrStay = JOptionPane.showInputDialog(board, "Would you like to 'take a role' or 'stay' on location: " + mod.getPlayerArray()[i].getLocation(), mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                         if (takeOrStay.equals("take a role")) {
                             takeARole(mod, i);
                             turnOver = true;
+                            mod.setInput("");
+                            
                         } else if (takeOrStay.equals("stay")) {
                             turnOver = true;
-                        }
+                            mod.setInput("");
+                        } 
                     }
     
                 }
@@ -115,18 +119,18 @@ public class View {
         int j = 0;
         while (validRole == false) {
             if (j == 0) {
-                onOrOff = JOptionPane.showInputDialog(board, "Would you like to take a 'main role' or 'supporting role?'");
+                onOrOff = JOptionPane.showInputDialog(board, "Would you like to take a 'main role' or 'supporting role?'", mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                 if (onOrOff.equals("main role")) {
-                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOnCardRoles(i));
+                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOnCardRoles(i), mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                 } else if (onOrOff.equals("supporting role")) {
-                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOffCardRoles(i));
+                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOffCardRoles(i), mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                 }  
             } else { 
-                onOrOff = JOptionPane.showInputDialog(board, "You do not have the required Rank to take that role.\nWould you like to take a 'main role' or 'supporting role?'");
+                onOrOff = JOptionPane.showInputDialog(board, "You do not have the required Rank to take that role.\nWould you like to take a 'main role' or 'supporting role?'", mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                 if (onOrOff.equals("main role")) {
-                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOnCardRoles(i)); 
+                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOnCardRoles(i), mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE); 
                 } else if (onOrOff.equals("supporting role")) {
-                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOffCardRoles(i));
+                    role = JOptionPane.showInputDialog(board, "What is the name of the role that you would like to take? " + mod.getOffCardRoles(i), mod.getPlayerName(i), JOptionPane.INFORMATION_MESSAGE);
                 }
             }
             validRole = mod.verifyRole(onOrOff, role, i);

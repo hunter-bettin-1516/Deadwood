@@ -11,6 +11,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.imageio.ImageIO;
 import java.awt.event.*;
+import java.util.*;
 
 public class BoardLayersListener extends JFrame {
 
@@ -26,12 +27,9 @@ public class BoardLayersListener extends JFrame {
   ImageIcon icon; //THE BOARD
   //JButtons
   JButton bMove;
-  JButton bTakeARole;
   JButton bUpgrade;
   JButton bAct;
   JButton bRehearse;
-  JButton bMainRole;
-  JButton bSupportRole;
   
   
   // JLayered Pane
@@ -126,45 +124,29 @@ public class BoardLayersListener extends JFrame {
        bMove.setBounds(icon.getIconWidth()+10,30,100, 20);
        bMove.addMouseListener(new boardMouseListener());
 
-       bTakeARole = new JButton("TAKE A ROLE");
-       bTakeARole.setBackground(Color.white);
-       bTakeARole.setBounds(icon.getIconWidth()+10,60,150, 20);
-       bTakeARole.addMouseListener(new boardMouseListener());
-       
        bUpgrade = new JButton("UPGRADE");
        bUpgrade.setBackground(Color.white);
-       bUpgrade.setBounds(icon.getIconWidth()+10,90,110, 20);
+       bUpgrade.setBounds(icon.getIconWidth()+10,120,110, 20);
        bUpgrade.addMouseListener(new boardMouseListener());
 
        bAct = new JButton("ACT");
        bAct.setBackground(Color.white);
-       bAct.setBounds(icon.getIconWidth()+10, 120,100, 20);
+       bAct.setBounds(icon.getIconWidth()+10, 60,100, 20);
        bAct.addMouseListener(new boardMouseListener());
        
        bRehearse = new JButton("REHEARSE");
        bRehearse.setBackground(Color.white);
-       bRehearse.setBounds(icon.getIconWidth()+10,150,110, 20);
+       bRehearse.setBounds(icon.getIconWidth()+10,90,110, 20);
        bRehearse.addMouseListener(new boardMouseListener());
 
-       bSupportRole = new JButton("SUPPORTING ROLE");
-       bSupportRole.setBackground(Color.white);
-       bSupportRole.setBounds(icon.getIconWidth()+10,180,170, 20);
-       bSupportRole.addMouseListener(new boardMouseListener());
-
-       bMainRole = new JButton("MAIN ROLE");
-       bMainRole.setBackground(Color.white);
-       bMainRole.setBounds(icon.getIconWidth()+10,210,110, 20);
-       bMainRole.addMouseListener(new boardMouseListener());
        
        
        // Place the action buttons in the top layer
        bPane.add(bMove, Integer.valueOf(2));
-       bPane.add(bTakeARole, Integer.valueOf(2));
        bPane.add(bUpgrade, Integer.valueOf(2));
        bPane.add(bAct, Integer.valueOf(2));
        bPane.add(bRehearse, Integer.valueOf(2));
-       bPane.add(bMainRole, Integer.valueOf(2));
-       bPane.add(bSupportRole, Integer.valueOf(2));
+      
        
        
 
@@ -264,8 +246,9 @@ public class BoardLayersListener extends JFrame {
          this.movieCardsLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
 
          this.cardBackLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
+
          bPane.add(this.movieCardsLabel[i], Integer.valueOf(2));
-         bPane.add(this.cardBackLabel[i], Integer.valueOf(3));
+         bPane.add(this.cardBackLabel[i], Integer.valueOf(3)); 
       } 
   }
 
@@ -296,9 +279,38 @@ public class BoardLayersListener extends JFrame {
    }
   }
 
-  public void movePlayerDice(Player[] players, int i) {
-     this.bPane.remove(this.playerDiceLabel[i]);
+  public void movePlayerDice(Player[] players, HashMap<String,Location> locMap, String location, int i) {
+     this.bPane.remove(players[i].getPlayerDice());
+     int x = locMap.get(location).getMovieCardCoordinates().get(0);
+     int y = locMap.get(location).getMovieCardCoordinates().get(1);
+     players[i].getPlayerDice().setBounds(x-40, y+60, 100, 100);
+     this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(4)); 
+     this.bPane.revalidate();
+     this.bPane.repaint();
+  }
 
+  public void movePlayerDiceToRole(String onOrOff, int roleIndex, HashMap<String,Location> locMap, Player player) {
+      this.bPane.remove(player.getPlayerDice());
+      if (onOrOff.equals("main role")) {
+         int x = locMap.get(player.getLocation()).getLocationsMovieCard().getOnCardXCoordinates().get(roleIndex) - 30;
+         int movieCardXCoordinate =locMap.get(player.getLocation()).getMovieCardCoordinates().get(0);
+         int y = locMap.get(player.getLocation()).getMovieCardCoordinates().get(1);
+         player.getPlayerDice().setBounds(movieCardXCoordinate + x, y + 17, 100, 100);
+
+      } else if (onOrOff.equals("supporting role")) {
+         int x = locMap.get(player.getLocation()).getOffCardRolesXCoordinates().get(roleIndex);
+         int y = locMap.get(player.getLocation()).getOffCardRolesYCoordinates().get(roleIndex);
+         player.getPlayerDice().setBounds(x-27, y-27, 100, 100);
+      }
+      this.bPane.add(player.getPlayerDice(), Integer.valueOf(4)); 
+      this.bPane.revalidate();
+      this.bPane.repaint();
+  }
+
+  public void flipMovieCard(HashMap<String,Location> locMap, String location) {
+     this.bPane.remove(locMap.get(location).getCardBackLabel());
+     this.bPane.validate();
+     this.bPane.repaint();
   }
 
 

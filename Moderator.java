@@ -144,7 +144,10 @@ public class Moderator {
             this.movies[i].setPartNameListCopy(xml.getPartNamesArrayList(cardDoc, i));
 
             this.movies[i].setCardFile(xml.getCardImage(cardDoc, i));
+            
             this.movies[i].setOnCardXCoordinates(xml.getonCardXCoordinateArrayList(cardDoc, i));
+            
+
         }
 
         //set location name, neighbors, shot counters, and offcard roles for each instance
@@ -162,7 +165,6 @@ public class Moderator {
             this.locations[i].setOffCardRolesXCoordinates(xml.getOffCardRoleXCoordinates(doc, i));
             this.locations[i].setOffCardRolesYCoordinates(xml.getOffCardRoleYCoordinates(doc, i));
             this.locations[i].setMovieCardCoordinates(xml.getMovieCardCoordinatesArrayList(doc, i));
-            
             //populate a random movie to each location
             boolean findNewCard = true;
             while (findNewCard == true) {
@@ -178,6 +180,8 @@ public class Moderator {
         GUI.placeMovieCards(this.locations);
         GUI.placeShotCounterLabels(this.locations);
         
+        
+
         //trailer and office are not a sets, so must be handled differently
         this.locations[10].setLocationName("Trailer");
         ArrayList<String> trailerNeighbors = new ArrayList<String>(
@@ -275,12 +279,15 @@ public class Moderator {
             int roleIndex = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameList().indexOf(role);
             int roleRank = this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getOnCardRolesList().get(roleIndex);
             if ((this.players[i].getPlayerRank()) >= roleRank ){
+                //call GUI func to move player dice to oncard or off card role
+                this.GUI.movePlayerDiceToRole(onOrOff, this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameListCopy().indexOf(role), this.locationMap, players[i]);
                 return true;
             }
         } else if (onOrOff.equals("supporting role")) {
             int roleIndex = this.locationMap.get(this.players[i].getLocation()).getPartNameList().indexOf(role);
             int roleRank = this.locationMap.get(this.players[i].getLocation()).getOffCardRolesList().get(roleIndex);
             if ((this.players[i].getPlayerRank()) >= roleRank) {
+                this.GUI.movePlayerDiceToRole(onOrOff, this.locationMap.get(this.players[i].getLocation()).getLocationsMovieCard().getPartNameListCopy().indexOf(role), this.locationMap, players[i]);
                 return true;
             }
         }
@@ -384,9 +391,13 @@ public class Moderator {
     
     //update player[i]s Location when they choose to move
     public boolean move(String location, int i) throws Exception {
-        System.out.print(this.players[i].getLocation() + " ######## this is the players location should be trailer");
         if (this.locationMap.get(this.players[i].getLocation()).getNeighborList().contains(location)) {
             this.players[i].setLocation(location);
+            if (this.locationMap.get(location).getHasBeenVisited() == false) {
+                this.locationMap.get(location).setHasBeenVisited(true);
+                this.GUI.flipMovieCard(this.locationMap, location);
+            }
+            this.GUI.movePlayerDice(this.players, this.locationMap, location, i);
             return true;
         } else {
             System.out.println("\nSilly cheater. You can't move to a non-adjacent room. Get skipped.");
