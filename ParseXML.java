@@ -208,12 +208,18 @@ public class ParseXML{
             NodeList children = card.getChildNodes();
             for (int j=0; j< children.getLength(); j++){
                Node sub = children.item(j);
-               if("part".equals(sub.getNodeName())){
+               if("parts".equals(sub.getNodeName())){
                   NodeList grandchildren = sub.getChildNodes();
                   for (int z = 0; z < grandchildren.getLength(); z++) {
-                     Node area = grandchildren.item(z);
-                     if ("area".equals(area.getNodeName())) {
-                        XCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("x").getNodeValue()));
+                     Node name = grandchildren.item(z);
+                     if ("part".equals(name.getNodeName())){
+                        NodeList greatgrandchildren = name.getChildNodes(); 
+                        for (int q = 0; q < greatgrandchildren.getLength(); q++){
+                           Node area = greatgrandchildren.item(q);
+                           if ("area".equals(area.getNodeName())) {
+                              XCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("x").getNodeValue()));
+                           }
+                        }
                      }
                   }                   
                }
@@ -230,12 +236,18 @@ public class ParseXML{
             NodeList children = card.getChildNodes();
             for (int j=0; j< children.getLength(); j++){
                Node sub = children.item(j);
-               if("part".equals(sub.getNodeName())){
+               if("parts".equals(sub.getNodeName())){
                   NodeList grandchildren = sub.getChildNodes();
                   for (int z = 0; z < grandchildren.getLength(); z++) {
-                     Node area = grandchildren.item(z);
-                     if ("area".equals(area.getNodeName())) {
-                        YCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("y").getNodeValue()));
+                     Node name = grandchildren.item(z);
+                     if ("part".equals(name.getNodeName())){
+                        NodeList greatgrandchildren = name.getChildNodes(); 
+                        for (int q = 0; q < greatgrandchildren.getLength(); q++){
+                           Node area = greatgrandchildren.item(q);
+                           if ("area".equals(area.getNodeName())) {
+                              YCoords.add(Integer.parseInt(area.getAttributes().getNamedItem("y").getNodeValue()));
+                           }
+                        }
                      }
                   }                   
                }
@@ -265,6 +277,8 @@ public class ParseXML{
             }
             return partsArr;
          }
+
+         
 
          public ArrayList<String> getOffCardPartsArrayList(Document d, int i) {
             Element root = d.getDocumentElement(); // <board> tag
@@ -315,8 +329,14 @@ public class ParseXML{
             NodeList children = card.getChildNodes();
             for (int j=0; j< children.getLength(); j++){
                Node sub = children.item(j);
-               if("area".equals(sub.getNodeName())){
-                areaArr.add(Integer.parseInt((sub.getAttributes().getNamedItem("x").getNodeValue()))); //populate on card x coordinate arrayList                          
+               if("part".equals(sub.getNodeName())){
+                  NodeList grandchildren = sub.getChildNodes();
+                  for (int z = 0; z < grandchildren.getLength(); z++) {
+                     Node area = grandchildren.item(z);
+                     if ("area".equals(area.getNodeName())) {
+                        areaArr.add(Integer.parseInt((area.getAttributes().getNamedItem("x").getNodeValue()))); //populate on card x coordinate arrayList  
+                     }
+                  }                       
                }
             }
             return areaArr;
