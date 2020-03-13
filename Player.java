@@ -7,7 +7,7 @@ public class Player {
     private String playerID;
     private int playerRank = 1;
     private int rehearsalCount = 0;
-    private String currentLocation = "Trailer";
+    private String currentLocation = "trailer";
     private String currentRole = "No role";
     private boolean onCard = false;
     private boolean working = false;
