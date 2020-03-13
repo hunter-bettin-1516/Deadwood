@@ -1,5 +1,5 @@
 # Deadwood
 locate Deadwood file path within the shell
-compile all class files ie. javac Moderator.java
+compile all class files ie. javac *.java
 
-type: 'java View' to execute the program
+type: 'java Deadwood' to execute the program
