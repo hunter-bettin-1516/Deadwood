@@ -31,7 +31,6 @@ public class BoardLayersListener extends JFrame {
   JButton bAct;
   JButton bRehearse;
   
-  
   // JLayered Pane
   JLayeredPane bPane;
 
@@ -120,36 +119,16 @@ public class BoardLayersListener extends JFrame {
 
        // Create Action buttons
        bMove = new JButton("MOVE");
-       bMove.setBackground(Color.white);
-       bMove.setBounds(icon.getIconWidth()+10,30,100, 20);
        bMove.addMouseListener(new boardMouseListener());
 
        bUpgrade = new JButton("UPGRADE");
-       bUpgrade.setBackground(Color.white);
-       bUpgrade.setBounds(icon.getIconWidth()+10,120,110, 20);
        bUpgrade.addMouseListener(new boardMouseListener());
 
        bAct = new JButton("ACT");
-       bAct.setBackground(Color.white);
-       bAct.setBounds(icon.getIconWidth()+10, 60,100, 20);
        bAct.addMouseListener(new boardMouseListener());
-       
+
        bRehearse = new JButton("REHEARSE");
-       bRehearse.setBackground(Color.white);
-       bRehearse.setBounds(icon.getIconWidth()+10,90,110, 20);
        bRehearse.addMouseListener(new boardMouseListener());
-
-       
-       
-       // Place the action buttons in the top layer
-       bPane.add(bMove, Integer.valueOf(2));
-       bPane.add(bUpgrade, Integer.valueOf(2));
-       bPane.add(bAct, Integer.valueOf(2));
-       bPane.add(bRehearse, Integer.valueOf(2));
-      
-       
-       
-
    }
 
    public void initializePlayerDice(Player[] players, int numPlayers) {
@@ -182,6 +161,55 @@ public class BoardLayersListener extends JFrame {
                y = 293;
             }
          }
+      }
+   }
+
+   public void makeActButtonsVisable(boolean b) {
+      if (b == true) {
+         
+         this.bAct.setBackground(Color.white);
+         this.bAct.setBounds(icon.getIconWidth()+10, 60,100, 20);
+         this.bAct.setVisible(true);
+
+         this.bRehearse.setBackground(Color.white);
+         this.bRehearse.setBounds(icon.getIconWidth()+10,90,110, 20);
+         this.bRehearse.setVisible(true);
+
+         this.bPane.add(bAct, Integer.valueOf(2));
+         this.bPane.add(bRehearse, Integer.valueOf(2));
+         this.bPane.repaint();
+         
+      } else if (b == false) {
+         this.bPane.remove(this.bAct);
+         this.bPane.remove(this.bRehearse);
+         this.bPane.repaint();
+      }
+   }
+
+   public void makeMoveButtonVisable(boolean b) {
+      if (b == true) {
+         bMove.setBackground(Color.white);
+         bMove.setBounds(icon.getIconWidth()+10,30,100, 20);
+         this.bPane.add(this.bMove, Integer.valueOf(2));
+         this.bPane.repaint();
+      } else if (b == false) {
+         this.bPane.remove(this.bMove);
+         this.bPane.repaint();
+      }
+   }
+
+   public void makeUpgradeButtonVisable(boolean b) {
+      if (b == true) {
+         bUpgrade.setBackground(Color.white);
+         bUpgrade.setBounds(icon.getIconWidth()+10,120,110, 20);
+         this.bUpgrade.setVisible(true);
+
+         this.bPane.add(this.bUpgrade, Integer.valueOf(2));
+         this.bPane.repaint();
+
+      } else if (b == false) {
+         this.bPane.remove(this.bUpgrade);
+         this.bPane.repaint();
       }
    }
 
@@ -243,6 +271,7 @@ public class BoardLayersListener extends JFrame {
 
          this.movieCardsLabel[i] = new JLabel(this.movieCards[i]);
 
+
          this.movieCardsLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
 
          this.cardBackLabel[i].setBounds(locArr[i].getMovieCardCoordinates().get(0), locArr[i].getMovieCardCoordinates().get(1), 205, 115);
@@ -252,12 +281,49 @@ public class BoardLayersListener extends JFrame {
       } 
   }
 
+  public void removeOldMovieCards(Location[] locArr) {
+      for (int i = 0; i < 10; i++) {
+         bPane.remove(this.cardBackLabel[i]);
+         bPane.remove(this.movieCardsLabel[i]); 
+      }
+      bPane.repaint();
+  }
+
+  public void removeMovieCard(HashMap<String,Location> locMap, Player player) {
+      int movieLabelIndex = locMap.get(player.getLocation()).getIndex();
+      bPane.remove(this.movieCardsLabel[movieLabelIndex]);
+      bPane.repaint();
+  }
+
+  public void removeShotCounterLabel(HashMap<String,Location> locMap, Player player) {
+      this.bPane.remove(locMap.get(player.getLocation()).getShotCounterLabels().get(0));
+      locMap.get(player.getLocation()).getShotCounterLabels().remove(0);
+  }
+
+  public void upgradeDiceLabel(Player[] players, int i) {
+      this.bPane.remove(players[i].getPlayerDice());
+      String diceFile = players[i].getDiceFile();
+      this.playerDiceImg[i] = new ImageIcon(diceFile);
+      this.playerDiceLabel[i] = new JLabel(this.playerDiceImg[i]);
+      this.playerDiceLabel[i].setBounds(5, 459, 100, 100);
+      players[i].setPlayerDice(this.playerDiceLabel[i]);
+      this.bPane.add(this.playerDiceLabel[i], Integer.valueOf(3));
+  }
+
+  public void deleteAllShotCountersFromBoard() {
+      for (int i =0; i < this.shotCounterLabels.length; i++) {
+         bPane.remove(this.shotCounterLabels[i]);
+      } 
+      this.bPane.repaint();  
+      this.shotCounterLabels = new JLabel[22]; 
+  }
+
   public void placeShotCounterLabels(Location[] locArr) { 
    //counter for iterating through each shot counter label
    int count = 0;
    for (int i = 0; i < 10; i ++) {
       for (int j = 0; j < locArr[i].getShotCounters(); j++) {
-         if (locArr[i].getLocationName().equals("General Store")) {
+         if (locArr[i].getLocationName().equals("general store")) {
             if (j == 0) {
                this.shotCounterLabels[count] = new JLabel(this.shotCounterImg);
                this.shotCounterLabels[count].setBounds(313, 330, 47, 47);
@@ -280,13 +346,29 @@ public class BoardLayersListener extends JFrame {
   }
 
   public void movePlayerDice(Player[] players, HashMap<String,Location> locMap, String location, int i) {
-     this.bPane.remove(players[i].getPlayerDice());
-     int x = locMap.get(location).getMovieCardCoordinates().get(0);
-     int y = locMap.get(location).getMovieCardCoordinates().get(1);
-     players[i].getPlayerDice().setBounds(x-40, y+60, 100, 100);
-     this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(4)); 
-     this.bPane.revalidate();
-     this.bPane.repaint();
+     if (location.equals("office")) {
+         this.bPane.remove(players[i].getPlayerDice());
+         players[i].getPlayerDice().setBounds(5, 459, 100, 100);
+         this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(4)); 
+         this.bPane.revalidate();
+         this.bPane.repaint();
+     } else if (location.equals("trailer")) {
+         this.bPane.remove(players[i].getPlayerDice());
+         players[i].getPlayerDice().setBounds(991, 248, 100, 100);
+         this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(4)); 
+         this.bPane.revalidate();
+         this.bPane.repaint();
+     } else {
+         this.bPane.remove(players[i].getPlayerDice());
+         int x = locMap.get(location).getMovieCardCoordinates().get(0);
+         int y = locMap.get(location).getMovieCardCoordinates().get(1);
+         players[i].getPlayerDice().setBounds(x-40, y+60, 100, 100);
+         this.bPane.add(players[i].getPlayerDice(), Integer.valueOf(4)); 
+         this.bPane.revalidate();
+         this.bPane.repaint();
+     }
+
+     
   }
 
   public void movePlayerDiceToRole(String onOrOff, int roleIndex, HashMap<String,Location> locMap, Player player) {
@@ -315,6 +397,8 @@ public class BoardLayersListener extends JFrame {
 
 
 
+
+
   
   
   // This class implements Mouse Events
@@ -325,19 +409,16 @@ public class BoardLayersListener extends JFrame {
       public void mouseClicked(MouseEvent e) {
          
          if (e.getSource()== bAct){
-            playerlabel.setVisible(true);
-            System.out.println("Acting is Selected\n");
+            mod.setInput("act");
          }
          else if (e.getSource()== bRehearse){
-            System.out.println("Rehearse is Selected\n");
+            mod.setInput("rehearse");
          }
          else if (e.getSource()== bMove){
-            System.out.println("Move is Selected\n");
             mod.setInput("move");
-
-            
-            
-         }         
+         } else if (e.getSource() == bUpgrade) {
+            mod.setInput("upgrade");
+         }
       }
       public void mousePressed(MouseEvent e) {
       }

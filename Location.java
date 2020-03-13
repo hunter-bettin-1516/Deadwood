@@ -7,6 +7,7 @@ import java.awt.*;
 
 public class Location {
     private String locationName;
+    private int index;
     private ArrayList<String> neighbors = new ArrayList<String>();
     private ArrayList<Integer> offCardRoles = new ArrayList<Integer>(); //part levels in integers
     private ArrayList<String> partNameList = new ArrayList<String>();
@@ -38,9 +39,15 @@ public class Location {
 
     //getters and setters for attributes
 
-    /**
-     * @param hasBeenVisited the hasBeenVisited to set
-     */
+    
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    
+    public int getIndex() {
+        return this.index;
+    }
     public void setHasBeenVisited(boolean b) {
         this.hasBeenVisited = b;
     }
@@ -56,6 +63,14 @@ public class Location {
 
     public void addShotCounterLabel(JLabel label) {
         this.shotCounterLabels.add(label);
+    }
+
+    public ArrayList<JLabel> getShotCounterLabels() {
+        return this.shotCounterLabels;
+    }
+    
+    public void removeAllShotCounterLabels(){
+        this.shotCounterLabels = new ArrayList<JLabel>();
     }
 
     public void setMovieCardCoordinates(ArrayList<Integer> coords) {

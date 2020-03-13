@@ -106,7 +106,7 @@ public class ParseXML{
                   for (int z=0; z< grandchildren.getLength(); z++) {
                      Node neighbor = grandchildren.item(z);
                      if("neighbor".equals(neighbor.getNodeName())) {  
-                        neighborArr.add(neighbor.getAttributes().getNamedItem("name").getNodeValue()); //populate neighbor arrayList                        
+                        neighborArr.add((neighbor.getAttributes().getNamedItem("name").getNodeValue()).toLowerCase()); //populate neighbor arrayList                        
                      }
                   }   
                }
